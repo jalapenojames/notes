@@ -2,10 +2,8 @@ import React, { useState, useMemo, useEffect } from "react";
 import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 import { NavLink, Link } from 'react-router-dom'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
  
-export default function SlateEditor({ note, index, updateRedirect, updateNotes }) {
+export default function SlateEditor({ note, index, updateRedirect, updateNotes, who }) {
   const editor = useMemo(() => withReact(createEditor()), []);
   const editor2 = useMemo(() => withReact(createEditor()), []);
 
@@ -27,7 +25,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes }
   return (
     <div className="App">
       <div style={{padding: '2% 5% 2% 5%'}}>
-        <NavLink to='/home' className="noteTitle" activeStyle={{ color: 'red' }}><h1>back</h1></NavLink>
+        { who=='home'? <NavLink to='/home' className="noteTitle"><h1>back</h1></NavLink> : who=='homeOG'? <NavLink to='/homeOG' className="noteTitle"><h1>back</h1></NavLink> : <h1>back</h1>}
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
             setValue2(newValue)
 

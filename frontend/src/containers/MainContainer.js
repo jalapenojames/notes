@@ -11,13 +11,15 @@ export default class MainContainer extends Component {
         currentEditor: '',
         redirect: 0,
         testNotes: [['Flatiron links', 'Homeroom'], ['Asdf', 'view'], ['Draw Boundaries', 'visuals are important to employers'], ['Task list','Urgent/ASAP'],['Places I want to work','Anima'], ['Wonton noodle soup', 'stir fry veggies, cut garlic, add crumbled seA salt and magic'], ['Packing list','Toothbrush'], ['Notes', "4.6 mi, 14 min"], ['Didi college tips', "messing up is learning, even if it’s embarrassing, you’ll learn from it"]],
-        index: 0
+        index: 0,
+        who: ''         // Did I come from Home or HomeOG? (I'm being used in Slate Editor to conditionally render my back Button)
     }
 
-    testClick = (note,index) => {
+    testClick = (note,index, who) => {
         this.setState({currentEditor: note})
         this.setState({redirect: 1})
         this.setState({ index })
+        this.setState({ who })
     }
 
     handleClickNew = () => {
@@ -30,9 +32,7 @@ export default class MainContainer extends Component {
         })
     }
 
-    updateRedirect = (redirect) => {
-        this.setState({redirect})
-    }
+    updateRedirect = (redirect) => this.setState({ redirect })
 
     updateNotes = (val,idx,who) => {
         let testNotes = this.state.testNotes
@@ -43,14 +43,16 @@ export default class MainContainer extends Component {
         this.setState({testNotes})
     }
 
+    updateWho = (who) => this.setState({ who })
+
     render() {
         return (
             <div style={{height: '800px'}}>
                 <Switch>
                     <Route exact path='/'><Home testClick={this.testClick} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
-                    <Route path='/home'><Home testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
-                    <Route path='/homeOG'><HomeOG testNotes={this.state.testNotes}/></Route>
-                    <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes}/></Route>
+                    <Route path='/home'><Home testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho}/></Route>
+                    <Route path='/homeOG'><HomeOG testClick={this.testClick} testNotes={this.state.testNotes} redirect={this.state.redirect} updateWho={this.updateWho}/></Route>
+                    <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who}/></Route>
                 </Switch>
             </div>
         )

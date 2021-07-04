@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import _arrow from '../arrow.png'
 import _create from '../create.png'
 import { Link, Redirect } from 'react-router-dom'
 
-export default function Home({ testClick, handleClickNew, redirect, testNotes }) {
+export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho }) {
+    
+    useEffect(() => {updateWho('')}, [])
+
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
             <div className='row' style={{position: 'relative'}}>
@@ -11,7 +14,7 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes })
                 <div className='col' style={{height: '300px', overflowY: 'auto', whiteSpace: 'nowrap', maxWidth: '500px'}}>
                     {testNotes.map((elem,index) => (
                         <React.Fragment>
-                            <div key={index} className='' style={{borderBottom: '1px solid black', padding: '2%'}} onClick={() => testClick(elem, index)}>
+                            <div key={index} className='' style={{borderBottom: '1px solid black', padding: '2%'}} onClick={() => testClick(elem, index, 'home')}>
                                 <div className='row' style={{overflowX: 'hidden'}}><h2>{elem[0]}</h2></div>
                                 <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1]}</p></div>
                                 {redirect==1? <Redirect to='/editor'/> : console.log() }
