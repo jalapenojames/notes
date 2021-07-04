@@ -20,6 +20,16 @@ export default class MainContainer extends Component {
         this.setState({ index })
     }
 
+    handleClickNew = () => {
+        let testNotes = this.state.testNotes.concat([['','']])
+        this.setState({ testNotes }, () => {
+            const index = this.state.testNotes.length-1
+            this.setState({index})
+            this.setState({currentEditor: ['','']})
+            this.setState({redirect: 1})
+        })
+    }
+
     updateRedirect = (redirect) => {
         this.setState({redirect})
     }
@@ -38,7 +48,7 @@ export default class MainContainer extends Component {
             <div style={{height: '800px'}}>
                 <Switch>
                     <Route exact path='/'><Home testClick={this.testClick} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
-                    <Route path='/home'><Home testClick={this.testClick} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
+                    <Route path='/home'><Home testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
                     <Route path='/homeOG'><HomeOG testNotes={this.state.testNotes}/></Route>
                     <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes}/></Route>
                 </Switch>

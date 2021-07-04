@@ -4,8 +4,6 @@ import _plus from '../plus_sign.png'
 import _test from '../testRescale.png'
 import { Link } from 'react-router-dom'
 
-// const testNotes = [['Flatiron links', 'Homeroom'], ['Asdf', 'view'], ['Draw Boundaries', 'visuals are important to employers'], ['Task list','Urgent/ASAP'],['Places I want to work','Anima'], ['Wonton noodle soup', 'stir fry veggies, cut garlic, add crumbled seA salt and magic'], ['Packing list','Toothbrush'], ['Notes', "4.6 mi, 14 min"], ['Didi college tips', "messing up is learning, even if it’s embarrassing, you’ll learn from it"]]
-
 export default class HomeOG extends Component {
 
     state = {
