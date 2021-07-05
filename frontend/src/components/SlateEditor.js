@@ -29,21 +29,22 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
             setValue2(newValue)
 
+            console.log(newValue)
             // console.log(newValue[0].children[0].text,index)
-            updateNotes(newValue[0].children[0].text, index, 'title')
+            updateNotes(newValue[0], index, 'title')
         }}>
         <Editable style={{ border: "1px solid black", borderBottom: 'none', height: '30px', width: '300px'}}/>
       </Slate>
 
-        <Slate editor={editor} value={value} onChange={(newValue) => {
+      <Slate editor={editor} value={value} onChange={(newValue) => {
             setValue(newValue)
 
+            console.log(newValue)
+            // console.log(newValue.map(elem=> elem.children[0].text+'<br>').join(''))
             // console.log(newValue[0].children[0].text)
-            updateNotes(newValue[0].children[0].text, index, 'content')
+            // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
+            updateNotes(newValue, index, 'content')
             // console.log(value.map(elem => elem.children[0].text))
-            // Save the value to Local Storage.
-            // const content = JSON.stringify(newValue)
-            // localStorage.setItem('content', content)
         }}>
         <Editable style={{ border: "1px solid black" , height: '600px'}}/>
       </Slate>
@@ -58,3 +59,25 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 // value={value}
 // onChange={(newValue) => setValue(newValue)}>
 // </Slate>
+
+// Save the value to Local Storage.
+// const content = JSON.stringify(newValue)
+// localStorage.setItem('content', content)
+
+
+// Error: Objects are not valid as a React child (found: object with keys {type, children}). If you meant to render a collection of children, use an array instead.
+
+// [{ type: 'paragraph', children: [{text: 'Homeroom'}]}]
+
+
+// [{type: 'paragraph'}, { children: '' }]
+
+// [{text: 'Homeroom'}]
+
+// [['Flatiron links', [{type: 'paragraph'}, { children: [{text: 'Homeroom'}] }]], ['Asdf', [{type: 'paragraph'}, { children: [{text: 'view'}] }]], ['Draw Boundaries', [{type: 'paragraph'}, { children: [{text: 'visuals are important to employers'}] }]], ['Task list',[{type: 'paragraph'}, { children: [{text: 'Urgent/ASAP'}] }]],['Places I want to work',[{type: 'paragraph'}, { children: [{text: 'Anima'}] }]], ['Wonton noodle soup', [{type: 'paragraph'}, { children: [{text: 'stir fry veggies, cut garlic, add crumbled seA salt and magic'}] }]], ['Packing list',[{type: 'paragraph'}, { children: [{text: 'Toothbrush'}] }]], ['Notes', [{type: 'paragraph'}, { children: [{text: "4.6 mi, 14 min"}] }]], ['Didi college tips', [{type: 'paragraph'}, { children: [{text: "messing up is learning, even if it’s embarrassing, you’ll learn from it"}] }]]],
+
+// [['Flatiron links', [{type: 'paragraph'}, { children: [{text: 'Homeroom'}] }]]]
+
+// [
+//   {['Flatiron links', [{type: 'paragraph'}, { children: [{text: 'Homeroom'}] }]]}
+// ]

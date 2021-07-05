@@ -1,11 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import _arrow from '../arrow.png'
 import _create from '../create.png'
 import { Link, Redirect } from 'react-router-dom'
 
 export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho }) {
     
-    useEffect(() => {updateWho('')}, [])
+    // useEffect(() => {updateWho('')}, [])
+
+    // We have a compelx array from elem[1] but we just want the first line
+    // const convArrToJSX = (nest) => {
+    //     return (
+            // nest.map(elem=> {
+            //     elem.children[0].text+'<br/>'
+            // }).join('')
+    //         nest[0].children[0].text
+    //     )
+    // }
 
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
@@ -17,6 +27,7 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
                             <div key={index} className='' style={{borderBottom: '1px solid black', padding: '2%'}} onClick={() => testClick(elem, index, 'home')}>
                                 <div className='row' style={{overflowX: 'hidden'}}><h2>{elem[0]}</h2></div>
                                 <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1]}</p></div>
+                                {/* elem[1] is now a nested array, lets write code to convert to text */}
                                 {redirect==1? <Redirect to='/editor'/> : console.log() }
                             </div>
                         </React.Fragment>
