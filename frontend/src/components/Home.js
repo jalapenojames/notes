@@ -1,26 +1,29 @@
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect } from 'react'
 import _arrow from '../arrow.png'
 import _create from '../create.png'
 import { Link, Redirect } from 'react-router-dom'
 
-export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho }) {
+export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho, note, deleteCurrentNote }) {
     
-    // useEffect(() => {updateWho('')}, [])
+    useEffect(() => {
+        updateWho('')
+    }, [])
 
-    // We have a compelx array from elem[1] but we just want the first line
-    // const convArrToJSX = (nest) => {
-    //     return (
-            // nest.map(elem=> {
-            //     elem.children[0].text+'<br/>'
-            // }).join('')
-    //         nest[0].children[0].text
-    //     )
-    // }
+    useEffect(() => {checkDeleteNewNote()}, [])
+
+    const checkDeleteNewNote = () => {
+        console.log(note[0]==="New note" && note[1]==='' || note[0]==="New note" && note[1]==='<br/>')
+        console.log(note[0], note[1])
+
+        // If meets condition, delete Note current index
+        if(note[0]==="New note" && note[1]==='' || note[0]==="New note" && note[1]==='<br/>')
+            deleteCurrentNote()
+    }
 
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
             <div className='row' style={{position: 'relative'}}>
-                <div className='col d-flex justify-content-end'><div className='d-flex align-items-center'><div style={{fontFamily: 'Quicksand', fontSize: '4em'}}>Notes</div></div></div>
+                <div className='col d-flex justify-content-end' style={{paddingRight: '5%'}}><div className='d-flex align-items-center'><div style={{fontFamily: 'Times New Roman', fontSize: '4em'}}>Notes</div></div></div>
                 <div className='col' style={{height: '300px', overflowY: 'auto', whiteSpace: 'nowrap', maxWidth: '500px'}}>
                     {testNotes.map((elem,index) => (
                         <React.Fragment>
@@ -28,7 +31,7 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
                                 <div className='row' style={{overflowX: 'hidden'}}><h2>{elem[0]}</h2></div>
                                 <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1].split('<br/>')[0]}</p></div>
                                 {/* elem[1] is now a nested array, lets write code to convert to text */}
-                                {redirect==1? <Redirect to='/editor'/> : console.log() }
+                                {redirect===1? <Redirect to='/editor'/> : console.log() }
                             </div>
                         </React.Fragment>
                     ))}
@@ -43,3 +46,13 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
 }
 
 // col d-flex align-items-center (line 9)
+
+// We have a compelx array from elem[1] but we just want the first line
+// const convArrToJSX = (nest) => {
+//     return (
+        // nest.map(elem=> {
+        //     elem.children[0].text+'<br/>'
+        // }).join('')
+//         nest[0].children[0].text
+//     )
+// }
