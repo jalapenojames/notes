@@ -30,8 +30,8 @@ export default class HomeOG extends Component {
                         this.props.filtered? testNotes=this.props.filtered : console.log()
 
                         // Prints note titles over 5 by 5 grid (created in Array(5).fill()... )
-                        return (<div className='col d-flex align-items-center justify-content-center' style={{overflowX: 'hidden', fontWeight: 'bold', position: 'relative'}} key={indexR+',1'+indexC}>
-                            { testNotes[boxNum-1]? testNotes[boxNum-1][0] : console.log() }
+                        return (<div className='col d-flex align-items-center justify-content-center' style={{overflowX: 'hidden', fontFamily: 'Quicksand', fontWeight: 'bold', position: 'relative'}} key={indexR+',1'+indexC}>
+                            { testNotes[boxNum-1]? this.lessThanFifteen(testNotes[boxNum-1][0]) : console.log() }
                             {/* { boxNum? boxNum-1 : console.log() } */}
                             { boxNum? <div onClick={() => this.props.testClick(testNotes[boxNum-1], boxNum-1, 'homeOG')} style={{position: 'absolute', height: '30%', width: '80%'}} key={indexR+','+indexC}></div> : console.log()}
                         </div>)
@@ -67,8 +67,22 @@ export default class HomeOG extends Component {
         this.props.updateFilter(result)
     }
 
+    // Return phrase up to 15 characters long
+    lessThanFifteen = (phrase) => {
+        let charactersUsed = 0
+        let desiredIndex = 0
+        phrase.split(' ').map((elem,index) => {
+            charactersUsed+= elem.length + 1
+            charactersUsed<16? desiredIndex = index : console.log()
+        })
+        console.log(desiredIndex, charactersUsed)
+
+        return (phrase.split(' ').map((elem,index) => index<=desiredIndex? elem : console.log()).join(' '))
+    }
+
     componentDidMount() {
         this.props.updateWho('')
+        this.lessThanFifteen('Flatiron has a b +')
     }
 
     render() {
