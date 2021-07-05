@@ -3,22 +3,25 @@ import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 import { NavLink, Link } from 'react-router-dom'
  
-export default function SlateEditor({ note, index, updateRedirect, updateNotes, who }) {
+export default function SlateEditor({ note, index, updateRedirect, updateNotes, who, notesTitle, notesContent }) {
   const editor = useMemo(() => withReact(createEditor()), []);
   const editor2 = useMemo(() => withReact(createEditor()), []);
 
-  const [value, setValue] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: `${note[1]}`}]
-    }
-  ]);
-  const [value2, setValue2] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: `${note[0]}`}]
-    }
-  ]);
+  // const [value, setValue] = useState([
+  //   {
+  //     type: "paragraph",
+  //     children: [{ text: `${note[1]}`}]
+  //   }
+  // ]);
+  // const [value2, setValue2] = useState([
+  //   {
+  //     type: "paragraph",
+  //     children: [{ text: `${note[0]}`}]
+  //   }
+  // ]);
+
+  const [value, setValue] = useState(notesContent[index]);
+  const [value2, setValue2] = useState([notesTitle[index]]);
 
   useEffect(() => {updateRedirect(0)}, [])
 

@@ -73,7 +73,7 @@ export default class MainContainer extends Component {
                     <Route exact path='/'><Home testClick={this.testClick} redirect={this.state.redirect} testNotes={this.state.testNotes}/></Route>
                     <Route path='/home'><Home testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho}/></Route>
                     <Route path='/homeOG'><HomeOG testClick={this.testClick} testNotes={this.state.testNotes} redirect={this.state.redirect} updateWho={this.updateWho} updateLayer={this.updateLayer} layer={this.state.layer}/></Route>
-                    <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who}/></Route>
+                    <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who} notesTitle={this.state.notesTitle} notesContent={this.state.notesContent}/></Route>
                 </Switch>
             </div>
         )

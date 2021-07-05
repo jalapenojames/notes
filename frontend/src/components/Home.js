@@ -26,7 +26,7 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
                         <React.Fragment>
                             <div key={index} className='' style={{borderBottom: '1px solid black', padding: '2%'}} onClick={() => testClick(elem, index, 'home')}>
                                 <div className='row' style={{overflowX: 'hidden'}}><h2>{elem[0]}</h2></div>
-                                <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1]}</p></div>
+                                <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1].split('<br/>')[0]}</p></div>
                                 {/* elem[1] is now a nested array, lets write code to convert to text */}
                                 {redirect==1? <Redirect to='/editor'/> : console.log() }
                             </div>
