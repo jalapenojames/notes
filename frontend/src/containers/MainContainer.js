@@ -26,12 +26,16 @@ export default class MainContainer extends Component {
     }
 
     handleClickNew = () => {
+        // Add new, empty note
         let testNotes = this.state.testNotes.concat([['','']])
-        this.setState({ testNotes }, () => {
+        let notesTitle = this.state.notesTitle.concat([{type: 'paragraph', children: [{text: ''}]}])
+        let notesContent = this.state.notesContent.concat([[{type: 'paragraph', children: [{text: ''}]}]])
+
+        this.setState({ testNotes, notesTitle, notesContent }, () => {
             const index = this.state.testNotes.length-1
             this.setState({index})
             this.setState({currentEditor: ['','']})
-            this.setState({redirect: 1})
+            this.setState({redirect: 1})                    // Redirect to the editor!
         })
     }
 

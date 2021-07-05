@@ -3,6 +3,7 @@ import _arrow from '../arrow.png'
 import _plus from '../plus_sign.png'
 import _test from '../testRescale.png'
 import { Link, Redirect } from 'react-router-dom'
+import Form from 'react-bootstrap/Form'
 
 export default class HomeOG extends Component {
 
@@ -15,26 +16,22 @@ export default class HomeOG extends Component {
         )
     }
 
-    componentDidMount() {
-        this.props.updateWho('')
-    }
-
     layer1 = () => { 
         return (
-            <div className="border-secondary" style={{height: '300px', width: '200px', position: 'relative'}}>
-                <div className="border-dark" style={{position: 'absolute', height: '600px', width: '800px', top: '-150px', left: '-300px', whiteSpace: 'nowrap'}}>
+            <div className="border-secondary" style={{height: '600px', width: '800px', position: 'relative'}}>
+                <div className="border-dark" style={{position: 'absolute', height: '600px', width: '800px', top: '0px', left: '0px', whiteSpace: 'nowrap'}}>
                     {Array(5).fill().map((elem,indexR) => (<div className='row' style={{height: '20%'}}>{Array(5).fill().map((elem,indexC) => {
 
                         // Provides index value of note title that should be displayed
                         const boxNum = (indexC+indexR)%2 == 1? indexR%2==0? 5*indexR/2+1 + (indexC+1+indexR%2)/2 - 1 : 5*(indexR+1)/2-2 + (indexC+1+indexR%2)/2 - 1 : console.log() 
+                        
+                        // for search filter feature, we will need to filter testNotes
                         const testNotes = this.props.testNotes
-                        // const testNotes = testNotesRaw.map(elem => [elem[0]])
-                        console.log(testNotes)
 
                         // Prints note titles over 5 by 5 grid (created in Array(5).fill()... )
                         return (<div className='col d-flex align-items-center justify-content-center' style={{overflowX: 'hidden', fontWeight: 'bold', position: 'relative'}}>
                             { testNotes[boxNum-1]? testNotes[boxNum-1][0] : console.log() }
-                            { boxNum? boxNum-1 : console.log() }
+                            {/* { boxNum? boxNum-1 : console.log() } */}
                             { boxNum? <div onClick={() => this.props.testClick(testNotes[boxNum-1], boxNum-1, 'homeOG')} style={{position: 'absolute', height: '30%', width: '80%'}}></div> : console.log()}
                         </div>)
                         })}</div>))
@@ -43,8 +40,24 @@ export default class HomeOG extends Component {
                         <img src={_arrow} alt='arrow' style={{height: '15px', color: 'black', transform: 'rotate(180deg)'}}/>
                     </div>
                 </div>
+                <div style={{position: 'absolute', height: '100px', width: '100px', left: '-120px'}}>
+                    <Form><Form.Group>
+                        <Form.Control onInput={this.handleSearch} size="sm" type="text" placeholder="Search..." />
+                        {/* <div class="form-group">
+                            <input onInput={this.handleSearch} type="text" className="form-control" id="exampleInputPassword1" placeholder="Search.."/>
+                        </div> */}
+                    </Form.Group></Form>
+                </div>
             </div>
         )
+    }
+
+    handleSearch = () => {
+        console.log('changed!')
+    }
+
+    componentDidMount() {
+        this.props.updateWho('')
     }
 
     render() {

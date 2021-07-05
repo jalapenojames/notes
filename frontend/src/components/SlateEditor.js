@@ -32,8 +32,6 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
             setValue2(newValue)
 
-            console.log(newValue)
-            // console.log(newValue[0].children[0].text,index)
             updateNotes(newValue[0], index, 'title')
         }}>
         <Editable style={{ border: "1px solid black", borderBottom: 'none', height: '30px', width: '300px'}}/>
@@ -42,12 +40,8 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
       <Slate editor={editor} value={value} onChange={(newValue) => {
             setValue(newValue)
 
-            console.log(newValue)
-            // console.log(newValue.map(elem=> elem.children[0].text+'<br>').join(''))
-            // console.log(newValue[0].children[0].text)
             // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
             updateNotes(newValue, index, 'content')
-            // console.log(value.map(elem => elem.children[0].text))
         }}>
         <Editable style={{ border: "1px solid black" , height: '600px'}}/>
       </Slate>
