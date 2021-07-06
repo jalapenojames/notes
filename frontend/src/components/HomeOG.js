@@ -20,14 +20,14 @@ export default class HomeOG extends Component {
         return (
             <div className="border-secondary" style={{height: '600px', width: '800px', position: 'relative'}}>
                 <div className="border-dark" style={{position: 'absolute', height: '600px', width: '800px', top: '0px', left: '0px', whiteSpace: 'nowrap'}}>
-                    {Array(6).fill().map((elem,indexR) => (<div className='row' style={{height: '20%'}}>{Array(6).fill().map((elem,indexC) => {
+                    {Array(5).fill().map((elem,indexR) => (<div className='row' style={{height: '20%'}}>{Array(5).fill().map((elem,indexC) => {
 
                         // Provides index value of note title that should be displayed
                         const boxNum = (indexC+indexR)%2 === 1? indexR%2===0? 5*indexR/2+1 + (indexC+1+indexR%2)/2 - 1 : 5*(indexR+1)/2-2 + (indexC+1+indexR%2)/2 - 1 : console.log() 
                         
                         // for search filter feature, we will need to filter testNotes
                         let testNotes = this.props.testNotes
-                        this.props.filtered? testNotes=this.props.filtered : console.log()
+                        this.props.filtered? this.props.filtered.length>0? testNotes=this.props.filtered : console.log() : console.log()
 
                         // Prints note titles over 5 by 5 grid (created in Array(5).fill()... )
                         return (<div className='col d-flex align-items-center justify-content-center' style={{overflowX: 'hidden', fontFamily: 'Quicksand', fontWeight: 'bold', position: 'relative'}} key={indexR+',1'+indexC}>
@@ -44,9 +44,6 @@ export default class HomeOG extends Component {
                 <div style={{position: 'absolute', height: '100px', width: '100px', left: '-120px'}}>
                     <Form><Form.Group>
                         <Form.Control onInput={()=>this.handleSearch()} id='searchQuery' size="sm" type="text" placeholder="Search..." />
-                        {/* <div class="form-group">
-                            <input onInput={this.handleSearch} type="text" className="form-control" id="exampleInputPassword1" placeholder="Search.."/>
-                        </div> */}
                     </Form.Group></Form>
                 </div>
             </div>
@@ -82,7 +79,7 @@ export default class HomeOG extends Component {
 
     componentDidMount() {
         this.props.updateWho('')
-        this.lessThanFifteen('Flatiron has a b +')
+        this.props.updateFilter(null)
     }
 
     render() {

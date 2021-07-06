@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import _arrow from '../arrow.png'
 import _create from '../create.png'
+import _map from '../map.png'
 import { Link, Redirect } from 'react-router-dom'
 
 export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho, note, deleteCurrentNote }) {
@@ -36,6 +37,8 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
                         </React.Fragment>
                     ))}
                 </div>
+
+                <div className='row' style={{position: 'absolute', top: '400px', left: '350px'}}><Link to='/makemap'><img src={_map} alt='map or a book' style={{height: '50px'}}/></Link></div>
                 <div className='col' style={{position: 'absolute', left: '400px'}}>
                     <Link to='/homeOG'><img src={_arrow} alt='arrow' style={{height: '15px'}}/></Link>
                     <button onClick={handleClickNew} style={{backgroundColor: 'transparent', border: 'none'}}><img src={_create} alt='create' style={{height: '20px'}}/></button>
