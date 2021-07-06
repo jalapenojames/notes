@@ -7,19 +7,6 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
   const editor = useMemo(() => withReact(createEditor()), []);
   const editor2 = useMemo(() => withReact(createEditor()), []);
 
-  // const [value, setValue] = useState([
-  //   {
-  //     type: "paragraph",
-  //     children: [{ text: `${note[1]}`}]
-  //   }
-  // ]);
-  // const [value2, setValue2] = useState([
-  //   {
-  //     type: "paragraph",
-  //     children: [{ text: `${note[0]}`}]
-  //   }
-  // ]);
-
   const [value, setValue] = useState(notesContent[index]);
   const [value2, setValue2] = useState([notesTitle[index]]);
 
@@ -27,7 +14,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 
   return (
     <div className="App">
-      <div style={{padding: '2% 5% 2% 5%'}}>
+      <div className='border border-secondary' style={{padding: '2% 5% 2% 5%'}}>
         { who==='home'? <NavLink to='/home' className="noteTitle"><h1>back</h1></NavLink> : who==='homeOG'? <NavLink to='/homeOG' className="noteTitle"><h1>back</h1></NavLink> : <h1>back</h1>}
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
             setValue2(newValue)
@@ -43,7 +30,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
             // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
             updateNotes(newValue, index, 'content')
         }}>
-        <Editable style={{ border: "1px solid black" , height: '600px'}}/>
+        <Editable style={{ border: "1px solid black" , height: '600px', overFlowY: 'auto'}}/>
       </Slate>
       </div>
     </div>
@@ -78,3 +65,17 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 // [
 //   {['Flatiron links', [{type: 'paragraph'}, { children: [{text: 'Homeroom'}] }]]}
 // ]
+
+
+// const [value, setValue] = useState([
+//   {
+//     type: "paragraph",
+//     children: [{ text: `${note[1]}`}]
+//   }
+// ]);
+// const [value2, setValue2] = useState([
+//   {
+//     type: "paragraph",
+//     children: [{ text: `${note[0]}`}]
+//   }
+// ]);

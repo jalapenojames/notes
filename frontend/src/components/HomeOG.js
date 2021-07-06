@@ -75,7 +75,7 @@ export default class HomeOG extends Component {
             charactersUsed+= elem.length + 1
             charactersUsed<16? desiredIndex = index : console.log()
         })
-        console.log(desiredIndex, charactersUsed)
+        // console.log(desiredIndex, charactersUsed)
 
         return (phrase.split(' ').map((elem,index) => index<=desiredIndex? elem : console.log()).join(' '))
     }
