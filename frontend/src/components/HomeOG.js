@@ -11,7 +11,7 @@ export default class HomeOG extends Component {
         return (
             <div className='col d-flex justify-content-end'>
                 <div className='d-flex align-items-center'>
-                    <div onClick={() => this.props.updateLayer(1)} style={{fontFamily: 'Times New Roman', fontSize: '4em'}}>
+                    <div onClick={() => this.handleClick0()} style={{fontFamily: 'Times New Roman', fontSize: '4em'}}>
                         Notes</div></div></div>
         )
     }
@@ -26,7 +26,8 @@ export default class HomeOG extends Component {
                         const boxNum = (indexC+indexR)%2 === 1? indexR%2===0? 5*indexR/2+1 + (indexC+1+indexR%2)/2 - 1 : 5*(indexR+1)/2-2 + (indexC+1+indexR%2)/2 - 1 : console.log() 
                         
                         // for search filter feature, we will need to filter testNotes
-                        let testNotes = this.props.testNotes
+                        let testNotes // this.props.testNotes
+                        this.props.filtered? testNotes=[] : testNotes=this.props.testNotes
                         this.props.filtered? this.props.filtered.length>0? testNotes=this.props.filtered : console.log() : console.log()
 
                         // Prints note titles over 5 by 5 grid (created in Array(5).fill()... )
@@ -48,6 +49,11 @@ export default class HomeOG extends Component {
                 </div>
             </div>
         )
+    }
+
+    handleClick0 = () => {
+        this.props.updateLayer(1)
+        this.props.updateFilter(null)
     }
 
     handleSearch = () => {
@@ -72,7 +78,6 @@ export default class HomeOG extends Component {
             charactersUsed+= elem.length + 1
             charactersUsed<16? desiredIndex = index : console.log()
         })
-        // console.log(desiredIndex, charactersUsed)
 
         return (phrase.split(' ').map((elem,index) => index<=desiredIndex? elem : console.log()).join(' '))
     }

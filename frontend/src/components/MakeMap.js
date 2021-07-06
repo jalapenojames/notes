@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
 
-export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot }) {
+export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
 
     const clickedNote = (id,layerMap) => {
         console.log('you clicked me', id)
@@ -18,26 +18,39 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     const layerMap0 = () => (
         <React.Fragment>
-            <h1>Pick your root</h1>
-            <p>MapField</p>
-            <br/><br/>
-            <br/><br/>
-            <p>your root goes here when selected</p>
-            <br/><br/>
-            Next<img src={_next} alt='next arrow' style={{height: '60px'}}/>
+            <div className="d-flex flex-column align-items-center">
+                <h1>Pick your root</h1>
+                <p>MapField</p>
+                <br/><br/>
+                <br/><br/>
+                <p>your root goes here when selected</p>
+                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
+                <br/><br/>
+                Next<img onClick={() => updateLayerMap(1)} src={_next} alt='next arrow' style={{height: '60px'}}/>
+            </div>
         </React.Fragment>
     )
 
     const layerMap1 = () => (
         <React.Fragment>
-            {/* <h1>Pick your root</h1>
-            <p>MapField</p> */}
+            <div className="d-flex flex-column align-items-center">
+                <h1>Add a child</h1>
+                <br/><br/>
+                <br/><br/>
+                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
+                <br/><br/>
+                Next<img src={_next} alt='next arrow' style={{height: '60px'}}/>
+            </div>
         </React.Fragment>        
     )
 
     useEffect(()=>{
         console.log([{who: 1, children: [ {who:2, children: { value:4, children: null}}, {who:3, children: {value:0,children: null}} ]}])
         console.log([{who: 1, children: null}])
+
+        // Reset Root upon render
+        updateRoot([])
+        updateLayerMap(0)
     },[])
 
     return (
