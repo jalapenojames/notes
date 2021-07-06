@@ -5,7 +5,7 @@ import _back from '../note_back.png'
 
 export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
 
-    const clickedNote = (id,layerMap) => {
+    const clickedNote = (id) => {
         console.log('you clicked me', id)
         // If layer map is 0, make note that's clicked on into the root note
         layerMap===0? handleClick0(id) : console.log()
@@ -14,6 +14,13 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const handleClick0 = (id) => {    // Make note that's clicked on into the root note
         console.log(notesTitle[id])
         updateRoot([{who: id, children: null}])
+    }
+
+    const handleClick0Arrow = () => root.length>0? updateLayerMap(1) : console.log()
+
+    const handleClick1Arrow = (who) => {
+        who==='left'? updateLayerMap(0) : console.log()
+        // who==='right'
     }
 
     const layerMap0 = () => (
@@ -26,7 +33,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 <p>your root goes here when selected</p>
                 {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
                 <br/><br/>
-                Next<img onClick={() => updateLayerMap(1)} src={_next} alt='next arrow' style={{height: '60px'}}/>
+                Next<img onClick={handleClick0Arrow} src={_next} alt='next arrow' style={{height: '60px'}}/>
             </div>
         </React.Fragment>
     )
@@ -39,7 +46,14 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 <br/><br/>
                 {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
                 <br/><br/>
-                Next<img src={_next} alt='next arrow' style={{height: '60px'}}/>
+                <div className='row'>
+                    <div className='col'>Back</div>
+                    <div className='col'>Next</div>
+                </div>
+                <div className='row'>
+                <img className='col' onClick={() => handleClick1Arrow('left')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', transform: 'rotate(180deg)', padding: '0 10px 0 10px'}}/>
+                <img className='col' onClick={() => handleClick1Arrow('right')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', padding: '0 10px 0 10px'}}/>
+                </div>
             </div>
         </React.Fragment>        
     )
@@ -64,7 +78,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 <div className='d-flex align-items-center' style={{width: '300px', height: '500px'}}>
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
                         {notesTitle.map((elem,index) => (
-                            <li onClick={() => clickedNote(index,0)} className='col' style={{width: '200px', listStyleType: 'none'}}>
+                            <li onClick={() => clickedNote(index)} className='col' style={{width: '200px', listStyleType: 'none'}}>
                                 <p className='border border-secondary rounded'>{elem.children[0].text}</p>
                             </li>                                                
                         ))}
