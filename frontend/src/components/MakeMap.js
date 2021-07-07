@@ -93,7 +93,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
                         {notesTitle.map((elem,index) => (
                             <li onClick={() => clickedNote(index)} className='col' style={{width: '200px', listStyleType: 'none'}}>
-                                <p className='border border-secondary rounded' style={{backgroundColor: `${value===index? 'green' : ''}`}}>{lessThanFifteen(elem.children[0].text)}</p>
+                                <p className='border border-secondary rounded' style={{backgroundColor: `${value===index? 'green' : ''}`, color: `${value===index? 'white' : ''}`}}>{lessThanFifteen(elem.children[0].text)}</p>
                             </li>                                                
                         ))}
                     </ul>  
