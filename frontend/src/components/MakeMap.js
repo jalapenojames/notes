@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
 
 export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
 
+    const [value, setValue] = useState('');
+
     const clickedNote = (id) => {
-        console.log('you clicked me', id)
-        // If layer map is 0, make note that's clicked on into the root note
         layerMap===0? handleClick0(id) : console.log()
+        layerMap===1? handleClick1(id) : console.log()
     }
 
-    const handleClick0 = (id) => {    // Make note that's clicked on into the root note
-        console.log(notesTitle[id])
-        updateRoot([{who: id, children: null}])
+    // Make note that's clicked on into the root note
+    const handleClick0 = (id) => updateRoot([{who: id, children: null}])
+    
+    const handleClick1 = (id) => {
+        console.log(id)
+        setValue(id)
     }
 
     const handleClick0Arrow = () => root.length>0? updateLayerMap(1) : console.log()
@@ -30,8 +34,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 <p>MapField</p>
                 <br/><br/>
                 <br/><br/>
-                <p>your root goes here when selected</p>
-                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
+                <p>your root goes here when selected:</p>
+                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{lessThanFifteen(testNotes[root[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p>}
                 <br/><br/>
                 Next<img onClick={handleClick0Arrow} src={_next} alt='next arrow' style={{height: '60px'}}/>
             </div>
@@ -44,7 +48,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 <h1>Add a child</h1>
                 <br/><br/>
                 <br/><br/>
-                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{testNotes[root[0].who][0]}</p> : <p className='' style={{width: '200px'}}>_</p>}
+                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{lessThanFifteen(testNotes[root[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p>}
                 <br/><br/>
                 <div className='row'>
                     <div className='col'>Back</div>
@@ -67,10 +71,20 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         updateLayerMap(0)
     },[])
 
+    // Return phrase up to 15 characters long
+    const lessThanFifteen = (phrase) => {
+        let charactersUsed = 0
+        let desiredIndex = 0
+        phrase.split(' ').map((elem,index) => {
+            charactersUsed+= elem.length + 1
+            charactersUsed<21? desiredIndex = index : console.log()
+        })
+
+        return (phrase.split(' ').map((elem,index) => index<=desiredIndex? elem : console.log()).join(' '))
+    }
+
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
-
-            {/*   */}
 
             {/* { PANEL } */}
             <div className='d-flex align-items-center' style={{height: '100%', borderRight: 'solid 1px black', position: 'relative'}}>
@@ -79,7 +93,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
                         {notesTitle.map((elem,index) => (
                             <li onClick={() => clickedNote(index)} className='col' style={{width: '200px', listStyleType: 'none'}}>
-                                <p className='border border-secondary rounded'>{elem.children[0].text}</p>
+                                <p className='border border-secondary rounded' style={{backgroundColor: `${value===index? 'green' : ''}`}}>{lessThanFifteen(elem.children[0].text)}</p>
                             </li>                                                
                         ))}
                     </ul>  
