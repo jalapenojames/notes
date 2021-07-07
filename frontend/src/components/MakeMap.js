@@ -17,7 +17,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     
     const handleClick1 = (id) => {
         console.log(id)
-        setValue(id)
+        value===id? setValue('') : setValue(id)
     }
 
     const handleClick0Arrow = () => root.length>0? updateLayerMap(1) : console.log()
@@ -69,6 +69,9 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // Reset Root upon render
         updateRoot([])
         updateLayerMap(0)
+
+        // Reset selected id
+        setValue('')
     },[])
 
     // Return phrase up to 15 characters long
@@ -93,7 +96,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
                         {notesTitle.map((elem,index) => (
                             <li onClick={() => clickedNote(index)} className='col' style={{width: '200px', listStyleType: 'none'}}>
-                                <p className='border border-secondary rounded' style={{backgroundColor: `${value===index? 'green' : ''}`, color: `${value===index? 'white' : ''}`}}>{lessThanFifteen(elem.children[0].text)}</p>
+                                <p className='border border-secondary rounded' style={{backgroundColor: `${layerMap===1? value===index? 'green' : '' : ''}`, color: `${layerMap===1? value===index? 'white' : '' : ''}`}}>{lessThanFifteen(elem.children[0].text)}</p>
                             </li>                                                
                         ))}
                     </ul>  
