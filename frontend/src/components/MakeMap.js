@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
 
-export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, updateRootModified, testNotes }) {
+export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
     const defaultArr = Array(testNotes.length).fill().map((elem,idx) => idx)
 
     const [value, setValue] = useState('');
     const [whatsLeft, setWhatsLeft] = useState(defaultArr);
+    const [str, setStr] = useState('');
+    const [toggle, setToggle] = useState(false);
 
     const clickedNote = (id) => {
+        console.log('id here is ', id)
         layerMap===0? handleClick0(id) : console.log()
         layerMap===1? handleClick1(id) : console.log()
     }
@@ -33,13 +36,16 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     }
 
     const handleClickRoot1 = (who) => {
-        // Remove 'who' from available notes 
+        // Remove 'who' from available notes, reminder who is value or currently selected note in left panel
+        // console.log(who)
         // Then display it as a child of root
         //      - Add under root (state)
         let copyRoot = root
         copyRoot[0].children = [{ who: who, children: null}]
-        // console.log(copyRoot)
+        console.log(copyRoot)
         updateRoot(copyRoot)
+        console.log('ran updateRoot in 45')
+        setToggle(!toggle)
         //      - Display it in JSX render
     }
 
@@ -66,13 +72,25 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             <div className="d-flex flex-column align-items-center">
                 <h1>Add a child</h1>
                 {/* <br/><br/> */}
-                <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px'}}>
-                    {root.length>0? <p onClick={()=>clickedMapNote(root[0].who)} className='border border-dark rounded' style={{width: '150px'}}>{lessThanFifteen(testNotes[root[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p>}
-                    {/* {root.length>0? <p className='border border-dark rounded' style={{width: '150px'}}>{lessThanFifteen(testNotes[root[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p>} */}
-                    {root.length>0? root[0].children? <p className='border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p> : <p className='' style={{width: '200px'}}>_</p> }
+                <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
+                    
+                    {/* Containers */}
+                    <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
+                        {Array(3).fill().map((elem,indexR) => (<div className='row text-white' style={{paddign: 0}}>{Array(3).fill().map((elem,indexC)=><div id={indexR+'-'+indexC} className='d-flex flex-column align-items-center justify-content-center border border-white' style={{height: '100px', width: '150px', padding: 0}}>
+                            {}
+
+                            {/* Root node */}
+                            {(indexR===1 && indexC===1)? root.length>0? <p onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{width: '60px', margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</p> : console.log() : console.log() }
+
+                        </div>)}</div>))}
+                    </div>
+                    
+                    {/* First child */}
+                    {/* {root.length>0? root[0].children? <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p> : <p className='' style={{width: '200px'}}>_</p> : <p className='' style={{width: '200px'}}>_</p> } */}
+                
                 </div>
-                {/* <br/><br/> */}
-                {/* <br/><br/> */}
+                <br/>
+                {/* <br/> */}
                 <div className='row'>
                     <div className='col'>Back</div>
                     <div className='col'>Next</div>
@@ -86,25 +104,54 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     )
 
     useEffect(()=>{
-        // console.log([{who: 1, children: [ {who:2, children: { value:4, children: null}}, {who:3, children: {value:0,children: null}} ]}])
-        // console.log([{who: 1, children: null}])
-
         // Reset Root upon render
         updateRoot([])
-        updateLayerMap(1)
+        // updateLayerMap(0)
 
         // Reset selected id
         setValue('')
-        // console.log("i'm using effect")
     },[])
 
+    // Runs after we update layer map (so that it lets this component mount first (?) my theory at least) ** DOESNT WORK RN
+    useEffect(()=>{
+        console.log('got to useEffect[root]', root.length>0)
+        root.length>0? displayRoot(root) : console.log()
+        console.log(root.length)
+    },[toggle])
+
+    const displayRoot = (node) => {
+        if(node[0].children){
+            let underlings = node[0].children.map(elem => elem.who).join(', ')
+            console.log('underlings')
+            actionDisplay(underlings)
+            node[0].children.map(elem => displayRoot([elem]))
+        }
+    }
+
+    const actionDisplay = (val) => {
+        
+        const valNum = val.toString().split('.')[val.toString().split('.').length-1]
+        const newNode = document.createElement('p')
+        newNode.innerText = lessThanFifteen(testNotes[valNum][0],18)
+        newNode.className = 'bg-primary text-white border border-dark rounded'
+
+        console.log(document.getElementById('1-1'), newNode)
+        document.getElementById('1-1')? document.getElementById('1-1').append(newNode) : console.log('1-1 dne')
+
+        // setStr(lessThanFifteen(testNotes[valNum][0],18))
+        // console.log(lessThanFifteen(testNotes[valNum][0],18))
+        // <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p>
+    }
+
     // Return phrase up to 18 characters long
-    const lessThanFifteen = (phrase) => {
+    const lessThanFifteen = (phrase, num) => {
         let charactersUsed = 0
         let desiredIndex = 0
+        if(num < 1 || !num)
+            num=15
         phrase.split(' ').map((elem,index) => {
             charactersUsed+= elem.length + 1
-            charactersUsed<18? desiredIndex = index : console.log()
+            charactersUsed<num? desiredIndex = index : console.log()
         })
 
         return (phrase.split(' ').map((elem,index) => index<=desiredIndex? elem : console.log()).join(' '))
@@ -159,7 +206,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                         {/* but it will look like [0,3,4,5] */}
                         {whichList().map((elem,index) => (
                             <li onClick={() => clickedNote(elem)} className='col' style={{width: '200px', listStyleType: 'none'}}>
-                                <p className='border border-secondary rounded' style={{backgroundColor: `${layerMap===1? value===elem? 'green' : '' : ''}`, color: `${layerMap===1? value===elem? 'white' : '' : ''}`}}>{lessThanFifteen(notesTitle[elem].children[0].text)}</p>
+                                <p className='border border-secondary rounded' style={{backgroundColor: `${layerMap===1? value===elem? 'green' : '' : ''}`, color: `${layerMap===1? value===elem? 'white' : '' : ''}`}}>{lessThanFifteen(notesTitle[elem].children[0].text,18)}</p>
                             </li>                                                
                         ))}
                     </ul>  
