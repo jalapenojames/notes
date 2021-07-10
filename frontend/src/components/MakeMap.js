@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { BFSdriver } from './MapBFS'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
 
@@ -12,7 +13,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const [toggle, setToggle] = useState(false);
 
     const clickedNote = (id) => {
-        console.log('id here is ', id)
+        // console.log('id here is ', id)
         layerMap===0? handleClick0(id) : console.log()
         layerMap===1? handleClick1(id) : console.log()
     }
@@ -33,23 +34,40 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     const handleClick1Arrow = (who) => {
         who==='left'? updateLayerMap(0) : console.log()
-        // who==='right'
+        who==='right'? updateLayerMap(2) : console.log()
     }
 
-    const handleClickRoot1 = (who) => {
-        // Disable 'who' in available notes, reminder who is value or currently selected note in left panel
-        // Change Left panel selected note to gray
-        
-        // Then display it as a child of root
-        //      - Add under root (state)
-        root[0].children = [{ who: who, children: null}]
-        updateRoot(root)
-        setToggle(!toggle)                                      
-        // ^Force update, this effectively runs the UseEffect that depends on a change in Root
-        //      - Then it displays it in JSX render (done by useEffect(()=>{}, [toggle]))
+    const handleClick2Arrow = (who) => {
+        who==='left'? updateLayerMap(1) : console.log()
+        // who==='right'? updateLayerMap(2) : console.log()
+    }
 
-        // Deselect selected notes (that have been appended) and disable their click function
+    const handleClickRoot1 = (who) => {        
+        // Add who under root (state)  
+        if(root[0].children === null) {
+            root[0].children = [{ who: who, children: null}]
+            // console.log([{ who: who, children: null}])
+            updateRoot(root)
+            setToggle(!toggle)
+            return
+        }
+        if(root[0].children!==null) {
+            let arr = []
+            // console.log('we selected', who, 'to be added')
+            root[0].children.map(elem => arr.push(elem.who))                    // Add existing children
+            arr.push(who)                                                       // Add selected note index
+            // console.log(arr)
+            const append = arr.map(elem => ({ who: elem, children: null}))
+            // console.log(append, root)
+            root[0].children = append
 
+            updateRoot(root)
+            setToggle(!toggle)                                      
+            // ^Force update, this effectively runs the UseEffect that depends on a change in Root
+            //      - Then it displays it in JSX render (done by useEffect(()=>{}, [toggle]))
+            return
+        }
+                // Then display it as a child of root /? where
     }
 
     // Pick your root
@@ -83,7 +101,10 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                             {}
 
                             {/* Root node */}
-                            {(indexR===1 && indexC===1)? root.length>0? <p onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{width: '60px', margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</p> : console.log() : console.log() }
+                            {(indexR===1 && indexC===1)? root.length>0? rootJSX() : console.log() : console.log() }
+                            
+                            {/* Child node */}
+                            {(indexR===1 && indexC===1)? root.length>0? mapTree2(root, []).join(', ') : console.log() : console.log() }
 
                         </div>)}</div>))}
                     </div>
@@ -106,6 +127,83 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         </React.Fragment>        
     )
 
+        // Look at note map
+        const layerMap2 = () => (
+            <React.Fragment>
+                <div className="d-flex flex-column align-items-center">
+                    <h1>Note Map</h1>
+                    {/* <br/><br/> */}
+                    <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
+                        
+                        {/* Containers */}
+                        <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
+                                <div className='d-flex flex-column align-items-center justify-content-center' style={{color: 'white'}}>
+                                {/* Root node */}
+                                { root.length>0? rootJSX() : console.log() }
+                                
+                                {/* Child node */}
+                                { root.length>0? mapTree2(root, []).slice(1, mapTree2(root, []).length).join(', ') : console.log() }
+
+                                {/* Drawing */}
+                                {drawing()}
+
+                                {/* Test */}
+                                {drawingTest()}                                
+                                </div>
+                        </div>                    
+                    </div>
+                    <br/>
+                    {/* <br/> */}
+                    <div className='row'>
+                        <div className='col'>Back</div>
+                        <div className='col'>Next</div>
+                    </div>
+                    <div className='row'>
+                    <img className='col' onClick={() => handleClick2Arrow('left')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', transform: 'rotate(180deg)', padding: '0 10px 0 10px'}}/>
+                    <img className='col' onClick={() => handleClick2Arrow('right')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', padding: '0 10px 0 10px'}}/>
+                    </div>
+                </div>
+            </React.Fragment>        
+        )
+    
+    const drawing = () => {
+        
+        const citizens = mapTree2(root, []).slice(1, mapTree2(root, []).length) // .join(', ')
+        const everybody = mapTree2(root, [])
+
+        root.length>0? root[0].children? console.log('citizens: ' + citizens) : console.log() : console.log()
+        root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
+
+        return (<div>
+            {root.length>0? root[0].children?  citizens.map(elem => <div>{testNotes[elem][0]}</div>) : console.log() : console.log()}
+        </div>)
+    }
+
+    const drawingTest = () => {
+        const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+
+        console.log(mapTree3(test3,[]))
+
+        const tree = mapTree3(test3,[])
+
+        // const citizens = mapTree2(root, []).slice(1, mapTree2(root, []).length) // .join(', ')
+        // const everybody = mapTree2(root, [])
+
+        // root.length>0? root[0].children? console.log('citizens: ' + citizens) : console.log() : console.log()
+        // root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
+
+        return (<div>
+            {'testing'}
+            {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)}
+            {/* <div className='row'>
+                <div className='col'>1</div>
+                <div className='col'>2</div>
+            </div> */}
+        </div>)
+    }
+
+    const rootJSX = () => <p onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{width: '60px', margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</p>
+
     useEffect(()=>{
         // Reset Root upon render
         updateRoot([])
@@ -113,10 +211,29 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         // Reset selected id
         setValue('')
-        console.log(mapTree2([{who: 2, children: null}],[]))
-        console.log(mapTree2([{who: 2, children: [{who: 3, children: null}]}],[]))
 
-        console.log(mapTree2([{who: 2, children: [{who: 3, children: null}]}],[]).includes(0))
+        // Testing 
+        // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+
+        // console.log(mapTree3(test2,[]))
+        // console.log(mapTree3(test3,[]))
+
+        // console.log(mapTree3(test2[0].children,[]))
+        // BFSdriver()
+        let t = makeEdges(test3,[])
+        console.log(t)
+        let tResult = []
+        t.map(elem => {
+            if(elem.length>0)
+                tResult.push(+elem)
+        })
+        let tCoord= []
+        for (let i=0; i<tResult.length/2; i++) {
+            tCoord.push([ tResult[2*i], tResult[2*i+1] ])
+        }
+        
+        console.log(tCoord)
 
     },[])
 
@@ -124,6 +241,48 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     useEffect(()=>{
         root.length>0? displayRoot(root) : console.log()
     },[toggle])
+
+    useEffect(()=>{
+        // console.log(root)
+    },[root])
+
+    const evalMakeEdges = () => {}
+
+    const getLastChar = (string) => string.split('.')[string.split('.').length-1]
+
+    const getEdges = (tree) => {
+        let s = getLastChar(tree[0].who)
+        if(tree[0].children) {
+            let c = tree[0].children.map(elem => getLastChar(elem.who))
+            // s += ','+c
+            s = c.map(elem => [+s].concat(+elem))
+            return s
+        }
+        return
+    }
+
+    const makeEdges = (tree,a) => {
+        if(tree[0].children) {          
+            console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
+            // return [tree[0].who].concat(tree[0].children.map(elem => makeEdges([elem],a.concat([tree[0].who])))).join().split(',')
+            return getEdges(tree).concat(tree[0].children.map(elem=>makeEdges([elem],a.concat([getEdges(tree)])))).join().split(',').map(elem => elem)
+        }
+        else {
+            console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
+            return getEdges(tree)
+        }
+    }
+
+    const mapTree3 = (tree,a) => {
+        if(tree[0].children) {          
+            console.log(tree[0].who, a.length)  
+            return [tree[0].who].concat(tree[0].children.map(elem => mapTree3([elem],a.concat([tree[0].who])))/*.join()*/)//.join().split(',')
+        }
+        else {
+            console.log(tree[0].who, a.length)  
+            return tree[0].who
+        }
+    }
 
     const mapTree = (tree,a) => {
         if(tree[0].children) {            
@@ -151,28 +310,15 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     }
 
 
-    const displayRoot = (node) => {
-        if(node[0].children){
-            let underlings = node[0].children.map(elem => elem.who).join(', ')
-            actionDisplay(underlings)
-            node[0].children.map(elem => displayRoot([elem]))
-        }
+    const displayRoot = (node) => {     // currently, Root is being passed in as node
+        console.log('i should be displaying something')
+
     }
 
     const actionDisplay = (val) => {
         const valNum = val.toString().split('.')[val.toString().split('.').length-1]    // Retrieve last number in path name e.g. 4.1.3 => "3"
         const newNode = document.createElement('p')                                     // Create new node to append
-        newNode.innerText = lessThanFifteen(testNotes[valNum][0],18)
-        newNode.className = 'bg-primary text-white border border-dark rounded'
-        newNode.onclick = () => {clickedMapNote(valNum)}
 
-        // console.log(document.getElementById('1-1'), newNode)
-
-        // Attach child node to Root
-        document.getElementById('1-1')? document.getElementById('1-1').append(newNode) : console.log('1-1 dne')
-
-        // Example: 
-        // <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p>
     }
 
     // Return phrase up to 18 characters long
@@ -219,7 +365,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         const defaultArr = Array(notesTitle.length).fill().map((elem,idx)=>idx)
         if(layerMap===0)        // This returned array is the complete and full notes list #=> [0,1,2...]
             return defaultArr
-        if(layerMap===1) {      // need to revisit this and return only 'whats left' - root - any 'taken' notes
+        if(layerMap===1 || layerMap===2) {      // need to revisit this and return only 'whats left' - root - any 'taken' notes
             let currentArr = defaultArr
 
             let rootIndex = ''
@@ -244,28 +390,27 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 currentArr.splice(rootIndex,1)      // *** Cannot splice any further, must use different method since index will no longer match
             }
 
-            console.log('takenNotes ', takenNotes)
-
             // Find matching index from takenNotes in currentArr
             // If it matches, splice it from array 
             // console.log(currentArr)
             let toBeRemoved = []
             takenNotes.map(elem => currentArr.includes(elem)? toBeRemoved.push(elem) : console.log())   // Adds 'notes to be removed' to array
-            console.log(toBeRemoved)
+            // console.log(toBeRemoved)
 
             let toBeReturned = []
             currentArr.map(elem => toBeRemoved.includes(elem)? console.log() : toBeReturned.push(elem))
-            console.log(toBeReturned)
+            // console.log(toBeReturned)
             
             return toBeReturned
         }        
         return defaultArr       // default 
     }
 
+    // Disable 'who' in available notes, reminder who is value or currently selected note in left panel
+    // Change Left panel selected note to gray
     const conditional = (color1, color2, elem) =>  layerMap===1? value===elem? root.length>0? mapTree2(root,[]).includes(elem)? color1 : color2 : color2 : console.log() : console.log()
 
     const conditional2 = () => {}
-    // 
 
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
@@ -290,10 +435,17 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             <div className="col" style={{position: 'relative'}}>
                 {layerMap===0? layerMap0() : console.log()}
                 {layerMap===1? layerMap1() : console.log()}
+                {layerMap===2? layerMap2() : console.log()}
             </div>
         </div>
     )
 }
+
+// Graveyard
+
+        // console.log(root[0])
+        // console.log(root[0].children)
+        // console.log(root[0].children? root[0].children[0].who? root[0].children.map(elem => elem.who) : console.log() : console.log())
 
         // Testing: 
         // console.log('printing root...')
@@ -305,3 +457,52 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         // Map test2 tree
         // console.log(mapTree(test3,[]))
+
+        // console.log(mapTree2([{who: 2, children: null}],[]))
+        // console.log(mapTree2([{who: 2, children: [{who: 3, children: null}]}],[]))
+
+        // console.log(mapTree2([{who: 2, children: [{who: 3, children: null}]}],[]).includes(0))
+
+
+
+
+
+
+        // old actionDisplay f-n: 
+        // const valNum = val.toString().split('.')[val.toString().split('.').length-1]    // Retrieve last number in path name e.g. 4.1.3 => "3"
+        // const newNode = document.createElement('p')                                     // Create new node to append
+
+        // // Append p element to the DOM (under Root)
+        // newNode.innerText = lessThanFifteen(testNotes[valNum][0],18)
+        // newNode.className = 'bg-primary text-white border border-dark rounded'
+        // newNode.onclick = () => {clickedMapNote(valNum)}
+
+        // // console.log(document.getElementById('1-1'), newNode)
+
+        // // Attach child node to Root
+        // document.getElementById('1-1')? document.getElementById('1-1').append(newNode) : console.log('1-1 dne')
+
+        // console.log('actionDisplay... ', mapTree(root,[]))
+
+        // // Example: 
+        // // <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p>
+
+
+        // old displayAction f-n
+        // if(node[0].children){
+        //     let underlings = node[0].children.map(elem => elem.who).join(', ')
+        //     actionDisplay(underlings)
+        //     node[0].children.map(elem => displayRoot([elem]))
+        // }
+
+
+    //     {Array(3).fill().map((elem,indexR) => (<div className='row text-white' style={{paddign: 0}}>{Array(3).fill().map((elem,indexC)=><div id={indexR+'-'+indexC} className='d-flex flex-column align-items-center justify-content-center border border-white' style={{height: '100px', width: '150px', padding: 0}}>
+    //     {}
+
+    //     {/* Root node */}
+    //     {(indexR===1 && indexC===1)? root.length>0? rootJSX() : console.log() : console.log() }
+        
+    //     {/* Child node */}
+    //     {(indexR===1 && indexC===1)? root.length>0? mapTree2(root, []).join(', ') : console.log() : console.log() }
+
+    // </div>)}</div>))}
