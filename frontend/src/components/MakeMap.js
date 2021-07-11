@@ -181,6 +181,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     const drawingTest = () => {
         const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
 
         console.log(mapTree3(test3,[]))
 
@@ -192,13 +193,26 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // root.length>0? root[0].children? console.log('citizens: ' + citizens) : console.log() : console.log()
         // root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
 
+
+        console.log(flattenObject(root))
+        const depth = Object.keys(flattenObject(root)).map(elem => elem.split('.').length/2)
+        const vals = Object.values(flattenObject(root))
+
+        console.log(depth,vals) 
+
+        let max_of_array = Math.max.apply(Math, depth);
+        console.log(max_of_array)
+
+        let map = Array(max_of_array).fill().map(elem => [])
+        depth.map((elem, i) => vals[i] || vals[i]===0? map[elem-1].push(vals[i]) : console.log())
+
+        console.log(map)
+     
+
         return (<div>
             {'testing'}
-            {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)}
-            {/* <div className='row'>
-                <div className='col'>1</div>
-                <div className='col'>2</div>
-            </div> */}
+            {/* {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)} */}
+            {map.map((elem,indexR) => <div className='row'>{Array(map[indexR].length).fill().map(elem => <div className='col'>🍗</div>)}</div>)}
         </div>)
     }
 
@@ -215,27 +229,82 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // Testing 
         // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
         const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        const testNM = [{who: 6, children: [{who: 4, children: null}]}]
 
-        // console.log(mapTree3(test2,[]))
-        // console.log(mapTree3(test3,[]))
+        // console.log(Object.values(flattenObject(test3)))
+        // console.log((flattenObject(test3)))
 
-        // console.log(mapTree3(test2[0].children,[]))
-        // BFSdriver()
-        let t = makeEdges(test3,[])
-        console.log(t)
-        let tResult = []
-        t.map(elem => {
-            if(elem.length>0)
-                tResult.push(+elem)
-        })
-        let tCoord= []
-        for (let i=0; i<tResult.length/2; i++) {
-            tCoord.push([ tResult[2*i], tResult[2*i+1] ])
-        }
-        
-        console.log(tCoord)
+        // console.log(Object.values(flattenObject2(test3)))
+        // console.log(flattenObject2(test3))
 
+        // console.log(test3.flat(Infinity))
+
+        // const coordList = evalMakeEdges(test3)
+        // console.log(coordList)
+
+        // BFSdriver(coordList, 2, 1)
+
+        // console.log(evalMakeEdges(testNM))
+        // console.log(evalMakeEdges(test3))
+
+        // console.log(flattenObject(test3))
+        // const depth = Object.keys(flattenObject(test3)).map(elem => elem.split('.').length/2)
+        // const vals = Object.values(flattenObject(test3))
+
+        // console.log(depth,vals)
+
+        // let max_of_array = Math.max.apply(Math, depth);
+        // console.log(max_of_array)
+
+        // let map = Array(max_of_array).fill().map(elem => [])
+        // depth.map((elem, i) => vals[i]? map[elem-1].push(vals[i]) : console.log())
+
+        // console.log(map)
     },[])
+
+    function flattenObject(ob) {
+        var toReturn = {};
+    
+        for (var i in ob) {
+            if (!ob.hasOwnProperty(i)) continue;
+    
+            if ((typeof ob[i]) == 'object' && ob[i] !== null) {
+                var flatObject = flattenObject(ob[i]);
+                for (var x in flatObject) {
+                    if (!flatObject.hasOwnProperty(x)) continue;
+    
+                    toReturn[i + '.' + x] = flatObject[x];
+                }
+            } else {
+                toReturn[i] = ob[i];
+            }
+        }
+        return toReturn;
+    }
+
+    function flattenObject2(ob, prefix = false, result = null) {
+        result = result || {};
+      
+        // Preserve empty objects and arrays, they are lost otherwise
+        if (prefix && typeof ob === 'object' && ob !== null && Object.keys(ob).length === 0) {
+          result[prefix] = Array.isArray(ob) ? [] : {};
+          return result;
+        }
+      
+        prefix = prefix ? prefix + '.' : '';
+      
+        for (const i in ob) {
+          if (Object.prototype.hasOwnProperty.call(ob, i)) {
+            if (typeof ob[i] === 'object' && ob[i] !== null) {
+              // Recursion on deeper objects
+              flattenObject2(ob[i], prefix + i, result);
+            } else {
+              result[prefix + i] = ob[i];
+            }
+          }
+        }
+        return result;
+      }
 
     // Display Root's children in JSX render
     useEffect(()=>{
@@ -246,9 +315,37 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // console.log(root)
     },[root])
 
-    const evalMakeEdges = () => {}
+    const evalMakeEdges = (tree) => {
+        let t = makeEdges(tree,[])
 
-    const getLastChar = (string) => string.split('.')[string.split('.').length-1]
+        // if(!t[1]) {
+        //     console.log('gottem', t.slice(0,1))
+        //     t = t.slice(0,1)
+
+        //     let tResult=[]
+        //     t.map(elem => {
+        //         // bookmark
+        //     })
+        // }
+
+        let tResult = []
+        t.map(elem => {
+            if(elem.length>0)
+                tResult.push(+elem)
+        })
+        let tCoord= []
+        for (let i=0; i<tResult.length/2; i++) {
+            tCoord.push([ tResult[2*i], tResult[2*i+1] ])
+        }
+
+        return tCoord
+    }
+
+    const getLastChar = (string) => {
+        if(typeof string === 'number')
+            return string.toString().split('.')[string.toString().split('.').length-1]
+        return string.split('.')[string.split('.').length-1]
+    }
 
     const getEdges = (tree) => {
         let s = getLastChar(tree[0].who)
@@ -261,18 +358,20 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         return
     }
 
+    // Recursive function to retrieve edges on Root
     const makeEdges = (tree,a) => {
         if(tree[0].children) {          
-            console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
+            // console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
             // return [tree[0].who].concat(tree[0].children.map(elem => makeEdges([elem],a.concat([tree[0].who])))).join().split(',')
-            return getEdges(tree).concat(tree[0].children.map(elem=>makeEdges([elem],a.concat([getEdges(tree)])))).join().split(',').map(elem => elem)
+            return getEdges(tree).concat(tree[0].children.map(elem=>makeEdges([elem],a.concat([getEdges(tree)])))).join().split(',')
         }
         else {
-            console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
+            // console.log(getLastChar(tree[0].who), a.length, getEdges(tree), tree[0].who)  
             return getEdges(tree)
         }
     }
 
+    // Recursive function to print Root (??? test)
     const mapTree3 = (tree,a) => {
         if(tree[0].children) {          
             console.log(tree[0].who, a.length)  
@@ -284,6 +383,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         }
     }
 
+    // Recursive function to print Root
     const mapTree = (tree,a) => {
         if(tree[0].children) {            
             return [tree[0].who].concat(tree[0].children.map(elem => mapTree([elem],a.concat([tree[0].who]))).join()).join().split(',').map(elem => +elem)
@@ -293,6 +393,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         }
     }
 
+    // Recursive function wrapper to return result as an Array
     const mapTree2 = (tree,a) => {
         const mapTree = (tree,a) => {
             if(tree[0].children) {            
@@ -310,10 +411,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     }
 
 
-    const displayRoot = (node) => {     // currently, Root is being passed in as node
-        console.log('i should be displaying something')
-
-    }
+    const displayRoot = (node) => console.log('i should be displaying something')       // currently, Root is being passed in as node 
 
     const actionDisplay = (val) => {
         const valNum = val.toString().split('.')[val.toString().split('.').length-1]    // Retrieve last number in path name e.g. 4.1.3 => "3"
@@ -506,3 +604,20 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     //     {(indexR===1 && indexC===1)? root.length>0? mapTree2(root, []).join(', ') : console.log() : console.log() }
 
     // </div>)}</div>))}
+
+
+
+
+        // // Testing 
+        // // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+
+        // // console.log(mapTree3(test2,[]))
+        // // console.log(mapTree3(test3,[]))
+
+        // // console.log(mapTree3(test2[0].children,[]))
+
+        // const coordList = evalMakeEdges(test3)
+        // console.log(coordList)
+
+        // BFSdriver(coordList, 2, 1)

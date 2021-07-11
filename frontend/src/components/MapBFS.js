@@ -1,4 +1,4 @@
-const BFSdriver= () => {
+const BFSdriver= (coords, level, seed) => {
     // JavaScript Program to print
     // count of nodes
     // at given level.
@@ -83,14 +83,30 @@ const BFSdriver= () => {
     
     // Create a graph given
     // in the above diagram
-    addEdge(0, 1)
-    addEdge(0, 2)
-    addEdge(1, 3)
-    addEdge(2, 4)
-    addEdge(2, 5)
     
-    let level = 2;
-    console.log(BFS(0, level));
+    // const originalCoords = [[0,1],[0,2],[1,3],[2,4],[2,5]]
+
+    // originalCoords.map(elem => addEdge(elem[0],elem[1]))
+
+    // coords.map(elem => addEdge(elem[0],elem[1]))
+
+    // Original code: 
+    // addEdge(0, 1)
+    // addEdge(0, 2)
+    // addEdge(1, 3)
+    // addEdge(2, 4)
+    // addEdge(2, 5)
+
+    // addEdge(1, 2)
+    // addEdge(1, 4)
+    // addEdge(2, 3)
+    // addEdge(2, 5)
+    // addEdge(4, 0)
+
+    addEdge(6,3)
+    
+    // let level = 2;
+    console.log(BFS(seed, level));
     // This code is contributed by unknown2108
     // https://www.geeksforgeeks.org/count-number-nodes-given-level-using-bfs/
 }
