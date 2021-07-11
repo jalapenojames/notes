@@ -93,25 +93,19 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             <div className="d-flex flex-column align-items-center">
                 <h1>Add a child</h1>
                 {/* <br/><br/> */}
-                <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
+                <div className=' d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative', zIndex: '1', backgroundColor: '#001C57'}}>
                     
-                    {/* Containers */}
-                    <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
-                        {Array(3).fill().map((elem,indexR) => (<div className='row text-white' style={{paddign: 0}}>{Array(3).fill().map((elem,indexC)=><div id={indexR+'-'+indexC} className='d-flex flex-column align-items-center justify-content-center border border-white' style={{height: '100px', width: '150px', padding: 0}}>
-                            {}
-
-                            {/* Root node */}
-                            {(indexR===1 && indexC===1)? root.length>0? rootJSX() : console.log() : console.log() }
-                            
-                            {/* Child node */}
-                            {(indexR===1 && indexC===1)? root.length>0? mapTree2(root, []).join(', ') : console.log() : console.log() }
-
-                        </div>)}</div>))}
-                    </div>
+                    {/* Root node */}
+                    {root.length>0? rootJSX() : console.log()}
                     
-                    {/* First child */}
-                    {/* {root.length>0? root[0].children? <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p> : <p className='' style={{width: '200px'}}>_</p> : <p className='' style={{width: '200px'}}>_</p> } */}
-                
+                    {/* Child node */}
+                    {root.length>0? drawing() : console.log()}
+
+                    {/* Drawing test */}
+                    {/* {(indexR===1 && indexC===2)? root.length>0? drawingTest() : console.log() : console.log() } */}
+
+                    {/* Tab Tree */}
+                    {/* {(indexR===1 && indexC===0)? root.length>0? tabTree() : console.log() : console.log() } */}
                 </div>
                 <br/>
                 {/* <br/> */}
@@ -127,65 +121,79 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         </React.Fragment>        
     )
 
-        // Look at note map
-        const layerMap2 = () => (
-            <React.Fragment>
-                <div className="d-flex flex-column align-items-center">
-                    <h1>Note Map</h1>
-                    {/* <br/><br/> */}
-                    <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
-                        
-                        {/* Containers */}
-                        <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
-                                <div className='d-flex flex-column align-items-center justify-content-center' style={{color: 'white'}}>
-                                {/* Root node */}
-                                { root.length>0? rootJSX() : console.log() }
-                                
-                                {/* Child node */}
-                                { root.length>0? mapTree2(root, []).slice(1, mapTree2(root, []).length).join(', ') : console.log() }
+    // Look at note map
+    const layerMap2 = () => (
+        <React.Fragment>
+            <div className="d-flex flex-column align-items-center">
+                <h1>Note Map</h1>
+                {/* <br/><br/> */}
+                <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
+                    
+                    {/* Containers */}
+                    <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
+                            <div className='d-flex flex-column align-items-center justify-content-center' style={{color: 'white'}}>
+                            {/* Root node */}
+                            {/* { root.length>0? rootJSX() : console.log() } */}
+                            
+                            {/* Drawing */}
+                            {/* {drawing()} */}
 
-                                {/* Drawing */}
-                                {drawing()}
+                            {/* Test */}
+                            {drawingTest()}   
 
-                                {/* Test */}
-                                {drawingTest()}                                
-                                </div>
-                        </div>                    
-                    </div>
-                    <br/>
-                    {/* <br/> */}
-                    <div className='row'>
-                        <div className='col'>Back</div>
-                        <div className='col'>Next</div>
-                    </div>
-                    <div className='row'>
-                    <img className='col' onClick={() => handleClick2Arrow('left')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', transform: 'rotate(180deg)', padding: '0 10px 0 10px'}}/>
-                    <img className='col' onClick={() => handleClick2Arrow('right')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', padding: '0 10px 0 10px'}}/>
-                    </div>
+                            {/* Tab Tree */}
+                            {tabTree()}
+                             
+                            </div>
+                    </div>                    
                 </div>
-            </React.Fragment>        
+                <br/>
+                {/* <br/> */}
+                <div className='row'>
+                    <div className='col'>Back</div>
+                    <div className='col'>Next</div>
+                </div>
+                <div className='row'>
+                <img className='col' onClick={() => handleClick2Arrow('left')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', transform: 'rotate(180deg)', padding: '0 10px 0 10px'}}/>
+                <img className='col' onClick={() => handleClick2Arrow('right')} src={_next} alt='next arrow' style={{height: '50px', width: 'auto', padding: '0 10px 0 10px'}}/>
+                </div>
+            </div>
+        </React.Fragment>        
+    )
+
+    const tabTree = () => {
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        console.log('root', flattenedRoot)
+        console.log('edges', evalMakeEdges(root))
+
+        return (
+            <React.Fragment>
+                <h5>tabTree</h5>
+                <div>{flattenedRoot.map(elem => (
+                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
+                ))}</div>
+            </React.Fragment>
         )
-    
+    }
     const drawing = () => {
-        
-        const citizens = mapTree2(root, []).slice(1, mapTree2(root, []).length) // .join(', ')
-        const everybody = mapTree2(root, [])
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        console.log('root', flattenedRoot)
+        console.log('edges', evalMakeEdges(root))
 
-        root.length>0? root[0].children? console.log('citizens: ' + citizens) : console.log() : console.log()
-        root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
-
-        return (<div>
-            {root.length>0? root[0].children?  citizens.map(elem => <div>{testNotes[elem][0]}</div>) : console.log() : console.log()}
-        </div>)
+        return (
+            <div>{flattenedRoot.splice(1,flattenedRoot.length-1).map(elem => (
+                <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
+            ))}</div>
+        )
     }
 
     const drawingTest = () => {
-        const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
-        const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
+        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        // const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
 
-        console.log(mapTree3(test3,[]))
+        // console.log(mapTree3(test3,[]))
 
-        const tree = mapTree3(test3,[])
+        // const tree = mapTree3(test3,[])
 
         // const citizens = mapTree2(root, []).slice(1, mapTree2(root, []).length) // .join(', ')
         // const everybody = mapTree2(root, [])
@@ -198,19 +206,19 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         const depth = Object.keys(flattenObject(root)).map(elem => elem.split('.').length/2)
         const vals = Object.values(flattenObject(root))
 
-        console.log(depth,vals) 
+        // console.log(depth,vals) 
 
         let max_of_array = Math.max.apply(Math, depth);
-        console.log(max_of_array)
+        // console.log(max_of_array)
 
         let map = Array(max_of_array).fill().map(elem => [])
         depth.map((elem, i) => vals[i] || vals[i]===0? map[elem-1].push(vals[i]) : console.log())
 
-        console.log(map)
+        // console.log(map)
      
 
         return (<div>
-            {'testing'}
+            {/* {'testing'} */}
             {/* {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)} */}
             {map.map((elem,indexR) => <div className='row'>{Array(map[indexR].length).fill().map(elem => <div className='col'>🍗</div>)}</div>)}
         </div>)
@@ -228,39 +236,33 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         // Testing 
         // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
-        const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
         const testNM = [{who: 6, children: [{who: 4, children: null}]}]
+        const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
+        const testRootOnly = [{who: 6, children: null}]
 
-        // console.log(Object.values(flattenObject(test3)))
-        // console.log((flattenObject(test3)))
 
-        // console.log(Object.values(flattenObject2(test3)))
-        // console.log(flattenObject2(test3))
+        const data = evalFlattenedOb(flattenObject(testNM))
 
-        // console.log(test3.flat(Infinity))
 
-        // const coordList = evalMakeEdges(test3)
-        // console.log(coordList)
-
-        // BFSdriver(coordList, 2, 1)
-
-        // console.log(evalMakeEdges(testNM))
-        // console.log(evalMakeEdges(test3))
-
-        // console.log(flattenObject(test3))
-        // const depth = Object.keys(flattenObject(test3)).map(elem => elem.split('.').length/2)
-        // const vals = Object.values(flattenObject(test3))
-
-        // console.log(depth,vals)
-
-        // let max_of_array = Math.max.apply(Math, depth);
-        // console.log(max_of_array)
-
-        // let map = Array(max_of_array).fill().map(elem => [])
-        // depth.map((elem, i) => vals[i]? map[elem-1].push(vals[i]) : console.log())
-
-        // console.log(map)
     },[])
+
+    const evalFlattenedOb = (ob) => {
+        let keys = Object.keys(ob)
+        let vals = Object.values(ob)
+
+        // Turn keys into 'depth'
+        const depth = keys.map(elem => elem.split('.').length/2)
+        const combined = depth.map((elem,i) => [depth[i],vals[i]])
+
+
+        let max_of_array = Math.max.apply(Math, depth);
+
+        let map = Array(max_of_array).fill().map(elem => [])
+        depth.map((elem, i) => vals[i] || vals[i]===0? map[elem-1].push(vals[i]) : console.log())
+
+        return map
+    }
 
     function flattenObject(ob) {
         var toReturn = {};
@@ -282,30 +284,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         return toReturn;
     }
 
-    function flattenObject2(ob, prefix = false, result = null) {
-        result = result || {};
-      
-        // Preserve empty objects and arrays, they are lost otherwise
-        if (prefix && typeof ob === 'object' && ob !== null && Object.keys(ob).length === 0) {
-          result[prefix] = Array.isArray(ob) ? [] : {};
-          return result;
-        }
-      
-        prefix = prefix ? prefix + '.' : '';
-      
-        for (const i in ob) {
-          if (Object.prototype.hasOwnProperty.call(ob, i)) {
-            if (typeof ob[i] === 'object' && ob[i] !== null) {
-              // Recursion on deeper objects
-              flattenObject2(ob[i], prefix + i, result);
-            } else {
-              result[prefix + i] = ob[i];
-            }
-          }
-        }
-        return result;
-      }
-
     // Display Root's children in JSX render
     useEffect(()=>{
         root.length>0? displayRoot(root) : console.log()
@@ -318,6 +296,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const evalMakeEdges = (tree) => {
         let t = makeEdges(tree,[])
 
+        if(tree[0].children===null)
+            return [tree[0].who]
         // if(!t[1]) {
         //     console.log('gottem', t.slice(0,1))
         //     t = t.slice(0,1)
@@ -355,7 +335,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             s = c.map(elem => [+s].concat(+elem))
             return s
         }
-        return
+        return 
     }
 
     // Recursive function to retrieve edges on Root
@@ -409,7 +389,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         else
             return mapTree(tree,a)
     }
-
 
     const displayRoot = (node) => console.log('i should be displaying something')       // currently, Root is being passed in as node 
 
@@ -541,6 +520,10 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
 // Graveyard
 
+                            {/* Child node */}
+                            {/* { root.length>0? mapTree2(root, []).slice(1, mapTree2(root, []).length).join(', ') : console.log() } */}
+
+
         // console.log(root[0])
         // console.log(root[0].children)
         // console.log(root[0].children? root[0].children[0].who? root[0].children.map(elem => elem.who) : console.log() : console.log())
@@ -563,6 +546,18 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
 
 
+                    {/* Containers */}
+                    // <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
+                    //     {Array(3).fill().map((elem,indexR) => (<div className='row text-white' style={{paddign: 0}}>{Array(3).fill().map((elem,indexC)=><div id={indexR+'-'+indexC} className='d-flex flex-column align-items-center justify-content-center border border-white' style={{height: '100px', width: '150px', padding: 0}}>
+                    //         {}
+
+                            
+
+                    //     </div>)}</div>))}
+                    // </div>
+                    
+                    {/* First child */}
+                    {/* {root.length>0? root[0].children? <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p> : <p className='' style={{width: '200px'}}>_</p> : <p className='' style={{width: '200px'}}>_</p> } */}
 
 
 
@@ -621,3 +616,60 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // console.log(coordList)
 
         // BFSdriver(coordList, 2, 1)
+
+
+
+    // function flattenObject2(ob, prefix = false, result = null) {
+    //     result = result || {};
+        
+    //     // Preserve empty objects and arrays, they are lost otherwise
+    //     if (prefix && typeof ob === 'object' && ob !== null && Object.keys(ob).length === 0) {
+    //         result[prefix] = Array.isArray(ob) ? [] : {};
+    //         return result;
+    //     }
+        
+    //     prefix = prefix ? prefix + '.' : '';
+        
+    //     for (const i in ob) {
+    //         if (Object.prototype.hasOwnProperty.call(ob, i)) {
+    //         if (typeof ob[i] === 'object' && ob[i] !== null) {
+    //             // Recursion on deeper objects
+    //             flattenObject2(ob[i], prefix + i, result);
+    //         } else {
+    //             result[prefix + i] = ob[i];
+    //         }
+    //         }
+    //     }
+    //     return result;
+    //     }
+
+
+            // console.log(Object.values(flattenObject(test3)))
+        // console.log((flattenObject(test3)))
+
+        // console.log(Object.values(flattenObject2(test3)))
+        // console.log(flattenObject2(test3))
+
+        // console.log(test3.flat(Infinity))
+
+        // const coordList = evalMakeEdges(test3)
+        // console.log(coordList)
+
+        // BFSdriver(coordList, 2, 1)
+
+        // console.log(evalMakeEdges(testNM))
+        // console.log(evalMakeEdges(test3))
+
+        // console.log(flattenObject(test3))
+        // const depth = Object.keys(flattenObject(test3)).map(elem => elem.split('.').length/2)
+        // const vals = Object.values(flattenObject(test3))
+
+        // console.log(depth,vals)
+
+        // let max_of_array = Math.max.apply(Math, depth);
+        // console.log(max_of_array)
+
+        // let map = Array(max_of_array).fill().map(elem => [])
+        // depth.map((elem, i) => vals[i]? map[elem-1].push(vals[i]) : console.log())
+
+        // console.log(map)
