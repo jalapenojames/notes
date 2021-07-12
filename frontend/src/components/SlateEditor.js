@@ -16,22 +16,24 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
     <div className="App">
       <div className='border border-secondary' style={{padding: '2% 5% 6% 5%'}}>
         { who==='home'? <NavLink to='/home' className="noteTitle"><h1>back</h1></NavLink> : who==='homeOG'? <NavLink to='/homeOG' className="noteTitle"><h1>back</h1></NavLink> : <h1>back</h1>}
+        <br/><br/>
+        <br/><br/>
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
-            setValue2(newValue)
+              setValue2(newValue)
 
-            updateNotes(newValue[0], index, 'title')
-        }}>
-        <Editable style={{ border: "1px solid black", borderBottom: 'none', height: '30px', width: '300px'}}/>
-      </Slate>
+              updateNotes(newValue[0], index, 'title')
+          }}>
+          <Editable style={{ /*border: "1px solid black",*/ borderBottom: 'none', height: '30px', width: '300px', fontFamily: '', fontSize: '2em', fontWeight: 'bold'}}/>
+        </Slate>
+          <br/>
+        <Slate editor={editor} value={value} onChange={(newValue) => {
+              setValue(newValue)
 
-      <Slate editor={editor} value={value} onChange={(newValue) => {
-            setValue(newValue)
-
-            // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
-            updateNotes(newValue, index, 'content')
-        }}>
-        <Editable style={{ border: "1px solid black" , height: '600px', overFlowY: 'auto'}}/>
-      </Slate>
+              // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
+              updateNotes(newValue, index, 'content')
+          }}>
+          <Editable style={{ border: "1px solid black", height: '400px', overFlowY: 'auto'}}/>
+        </Slate>
       </div>
     </div>
   );

@@ -1177,6 +1177,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/bodoni-moda@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/bodoni-moda/-/bodoni-moda-4.5.0.tgz#7aa694bf3877c20b2d728fb84a459430a807c2ce"
+  integrity sha512-+nvWJN0X6X1k+7mgNSoUPazWsE8pslIG2j9d8NkneoNMwH7qNBAIYL+WS2eBUYgro6vnPpeLXWkIv+ew8R2rnQ==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"

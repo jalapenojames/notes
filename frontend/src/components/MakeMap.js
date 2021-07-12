@@ -22,13 +22,13 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // If you click the root note, then add value as root's child
         // id for this scenario is the rootID
         root[0].who === id? value || value===0? handleClickRoot1(value) /* Add function here to add value as a child of root */ : console.log() : console.log()
-        id!== root[0].who? console.log('alright got here') : console.log()
+        id!== root[0].who? handleClickChild(id) : console.log()
     }
 
     // Make note that's clicked on into the root note
     const handleClick0 = (id) => updateRoot([{who: id, children: null}])
     
-    const handleClick1 = (id) => value===id? setValue('') : setValue(id)       // (setValue(''), setWhatsLeft())
+    const handleClick1 = (id) => value===id? setValue('') : setValue(id)
 
     const handleClick0Arrow = () => root.length>0? updateLayerMap(1) : console.log()
 
@@ -67,7 +67,62 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             //      - Then it displays it in JSX render (done by useEffect(()=>{}, [toggle]))
             return
         }
-                // Then display it as a child of root /? where
+    }
+
+    const handleClickChild = (who) => {
+        console.log('alright got here', 'clicked: '+who)
+        // update root , 
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        console.log(flattenedRoot)
+        // console.log(Object.keys(flattenObject(root)))
+        // console.log(Object.values(flattenObject(root)))
+        // console.log(makeEdges(root,[]))
+
+        // Find who, and add 'who' as a child
+        // Find path of who
+        const path = findPathWho(root,who)                   // Path is in this format #=> [root,parent,who]
+        const pathCol = findPathCol(root,who)                   // Path is in this format #=> [col,col,col]
+        console.log(path)
+        console.log(pathCol)
+        // Edit that root 
+        //      - Find address:
+        let holder = [`root[${pathCol[0]}]`]
+        pathCol.slice(1,pathCol.length).map((elem,i) => {
+            holder.push(`children[${pathCol[i+1]}]`)
+        })
+        const address = eval(holder.join('.'))
+        console.log('address' , address)
+        
+                // Add who under node  
+                if(address.children === null) {
+                    address.children = [{ who: value, children: null}]
+                    // console.log([{ who: who, children: null}])
+                    updateRoot(root)
+                    setToggle(!toggle)
+                    return
+                }
+
+                if(address.children!==null) {
+                    let arr = []
+                    // console.log('we selected', who, 'to be added')
+                    address.children.map(elem => arr.push(elem.who))                    // Add existing children
+                    arr.push(value)                                                       // Add selected note index
+                    // console.log(arr)
+                    const append = arr.map(elem => ({ who: elem, children: null}))
+                    // console.log(append, root)
+                    address.children = append
+        
+                    updateRoot(root)
+                    setToggle(!toggle)                                      
+                    return
+                }
+
+        // upon successfull add, set Value to '' to reset and allow another update
+        // might not have to because the conditional checks if its an element of root
+
+        // example: [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
+
+
     }
 
     // Pick your root
@@ -101,11 +156,9 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     {/* Child node */}
                     {root.length>0? drawing() : console.log()}
 
-                    {/* Drawing test */}
-                    {/* {(indexR===1 && indexC===2)? root.length>0? drawingTest() : console.log() : console.log() } */}
+                    {/* Square frame */}
+                    {/* <div style={{transform: 'rotate(45deg)', border: 'solid white 2px', height: '100px', width: '100px', position: 'absolute'}}>square</div> */}
 
-                    {/* Tab Tree */}
-                    {/* {(indexR===1 && indexC===0)? root.length>0? tabTree() : console.log() : console.log() } */}
                 </div>
                 <br/>
                 {/* <br/> */}
@@ -177,12 +230,12 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     }
     const drawing = () => {
         const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        console.log('root', flattenedRoot)
-        console.log('edges', evalMakeEdges(root))
+        // console.log('root', flattenedRoot)
+        // console.log('edges', evalMakeEdges(root))
 
         return (
             <div>{flattenedRoot.splice(1,flattenedRoot.length-1).map(elem => (
-                <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
+                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p id={'Tag'+e} onClick={()=>clickedMapNote(e)} className='bg-primary text-white border border-dark rounded' style={{width: '70px', marginTop: '5%'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
             ))}</div>
         )
     }
@@ -242,10 +295,73 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         const testRootOnly = [{who: 6, children: null}]
 
 
-        const data = evalFlattenedOb(flattenObject(testNM))
+        // let who = 4
+        // let data = evalFlattenedOb(flattenObject(testNM))
+        // const path = findPathWho(testNM, who)               // [1,4] who's in the path
+        // const pathCols = findPathCol(testNM, who)           // [0,1] which columns to pick from
+
+        // findPathWho(test4,2)
+
+        // console.log(data)
+        // console.log(path, pathCols)
+
+
+        // let holder = [`root[${pathCols[0]}]`]
+        // pathCols.slice(1,pathCols.length).map((elem,i) => {
+        //     holder.push(`children[${pathCols[i+1]}]`)
+        // })
+        // console.log(holder.join('.'))
+
+
+        // makePath(who,[])
 
 
     },[])
+
+    const findPathWho = (tree, who) => {
+        // initialization
+        const data = evalMakeEdges(tree)
+        let holder = [who]
+        let depth = []
+
+        // find depth of who
+        const flatOb = evalFlattenedOb(flattenObject(tree))
+        console.log(flatOb)
+        flatOb.map((elem,i) => {
+            if(elem.includes(who.toString()) || elem.includes(who))
+                depth.push(i)
+        }) 
+        console.log('depth, ' + depth)
+
+
+        let w=who
+        for(let i=0; i<depth[0]; i++) {
+            data.map(elem => {
+                if(elem[1]===w) {
+                    holder.push(elem[0])
+                    w=elem[0]
+                }
+            })
+        }
+        return holder.reverse()
+    }
+
+    const findPathCol = (tree,who) => {
+        let data = evalFlattenedOb(flattenObject(tree))
+        const path = findPathWho(tree, who)
+        let holder = []
+        // console.log(data)
+        // console.log(path)
+
+        path.map((elem,i) => {
+            data[i].map((elem2,i2) => {
+                if(+elem2===elem)
+                    holder.push(i2)
+            })
+        })
+
+        return holder
+    }
 
     const evalFlattenedOb = (ob) => {
         let keys = Object.keys(ob)
@@ -485,9 +601,20 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     // Disable 'who' in available notes, reminder who is value or currently selected note in left panel
     // Change Left panel selected note to gray
-    const conditional = (color1, color2, elem) =>  layerMap===1? value===elem? root.length>0? mapTree2(root,[]).includes(elem)? color1 : color2 : color2 : console.log() : console.log()
+    const conditional = (color1, color2, elem) =>  {
+        // layerMap===1? value===elem? root.length>0? mapTree2(root,[]).includes(elem)? color1 : console.log() : console.log() : console.log() : console.log()
+        if(layerMap===1 && root.length>0) {
+            if(mapTree2(root,[]).includes(elem))
+                return color1
+            if(value===elem)
+                return color2
+            if(value!==elem)
+                return ''
+        }
+        return
+    }
 
-    const conditional2 = () => {}
+    const conditional2 = (color1, color2, elem) => layerMap===1? value===elem? root.length>0? mapTree2(root,[]).includes(elem)? color1 : color2 : console.log() : console.log() : console.log()
 
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>

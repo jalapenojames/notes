@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "typeface-quicksand";
+import "@fontsource/bodoni-moda";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
