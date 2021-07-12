@@ -72,11 +72,9 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const handleClickChild = (who) => {
         console.log('alright got here', 'clicked: '+who)
         // update root , 
-        const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        console.log(flattenedRoot)
-        // console.log(Object.keys(flattenObject(root)))
-        // console.log(Object.values(flattenObject(root)))
-        // console.log(makeEdges(root,[]))
+        // const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        // console.log(flattenedRoot)
+ 
 
         // Find who, and add 'who' as a child
         // Find path of who
@@ -93,29 +91,29 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         const address = eval(holder.join('.'))
         console.log('address' , address)
         
-                // Add who under node  
-                if(address.children === null) {
-                    address.children = [{ who: value, children: null}]
-                    // console.log([{ who: who, children: null}])
-                    updateRoot(root)
-                    setToggle(!toggle)
-                    return
-                }
+            // Add who under node  
+            if(address.children === null) {
+                address.children = [{ who: value, children: null}]
+                // console.log([{ who: who, children: null}])
+                updateRoot(root)
+                setToggle(!toggle)
+                return
+            }
 
-                if(address.children!==null) {
-                    let arr = []
-                    // console.log('we selected', who, 'to be added')
-                    address.children.map(elem => arr.push(elem.who))                    // Add existing children
-                    arr.push(value)                                                       // Add selected note index
-                    // console.log(arr)
-                    const append = arr.map(elem => ({ who: elem, children: null}))
-                    // console.log(append, root)
-                    address.children = append
-        
-                    updateRoot(root)
-                    setToggle(!toggle)                                      
-                    return
-                }
+            if(address.children!==null) {
+                let arr = []
+                // console.log('we selected', who, 'to be added')
+                address.children.map(elem => arr.push(elem.who))                        // Add existing children
+                arr.push(value)                                                         // Add selected note index
+                // console.log(arr)
+                const append = arr.map(elem => ({ who: elem, children: null}))
+                // console.log(append, root)
+                address.children = append
+    
+                updateRoot(root)
+                setToggle(!toggle)                                      
+                return
+            }
 
         // upon successfull add, set Value to '' to reset and allow another update
         // might not have to because the conditional checks if its an element of root
@@ -293,29 +291,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         const testNM = [{who: 6, children: [{who: 4, children: null}]}]
         const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
         const testRootOnly = [{who: 6, children: null}]
-
-
-        // let who = 4
-        // let data = evalFlattenedOb(flattenObject(testNM))
-        // const path = findPathWho(testNM, who)               // [1,4] who's in the path
-        // const pathCols = findPathCol(testNM, who)           // [0,1] which columns to pick from
-
-        // findPathWho(test4,2)
-
-        // console.log(data)
-        // console.log(path, pathCols)
-
-
-        // let holder = [`root[${pathCols[0]}]`]
-        // pathCols.slice(1,pathCols.length).map((elem,i) => {
-        //     holder.push(`children[${pathCols[i+1]}]`)
-        // })
-        // console.log(holder.join('.'))
-
-
-        // makePath(who,[])
-
-
     },[])
 
     const findPathWho = (tree, who) => {

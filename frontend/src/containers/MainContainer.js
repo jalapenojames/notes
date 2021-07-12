@@ -11,15 +11,19 @@ export default class MainContainer extends Component {
     state = {
         currentEditor: '',
         redirect: 0,
-        testNotes: [['Flatiron links', 'Homeroom'], ['Asdf', 'view'], ['Draw Boundaries', 'visuals are important to employers'], ['Task list','Urgent/ASAP'],['Places I want to work','Notion'], ['Wonton noodle soup', 'stir fry veggies, cut garlic, add crumbled seA salt and magic'], ['Packing list','Toothbrush'], ['Notes', "4.6 mi, 14 min"], ['Didi college tips', "messing up is learning, even if it’s embarrassing, you’ll learn from it"]],
-        notesTitle: [{type: 'paragraph', children: [{text: 'Flatiron links'}]},{type: 'paragraph', children: [{text: 'Asdf'}]},{type: 'paragraph', children: [{text: 'Draw Boundaries'}]},{type: 'paragraph', children: [{text: 'Task list'}]},{type: 'paragraph', children: [{text: 'Places I want to work'}]},{type: 'paragraph', children: [{text: 'Wonton noodle soup'}]},{type: 'paragraph', children: [{text: 'Packing list'}]}, {type: 'paragraph', children: [{text: 'Notes'}]}, {type: 'paragraph', children: [{text: 'Didi college tips'}]}],
-        notesContent: [[{type: 'paragraph', children: [{text: 'Homeroom'}]}],[{type: 'paragraph', children: [{text: 'view'}]}],[{type: 'paragraph', children: [{text: 'visuals are important to employers'}]}],[{type: 'paragraph', children: [{text: 'Urgent/ASAP'}]}],[{type: 'paragraph', children: [{text: 'Notion'}]}, {type: 'paragraph', children: [{text: 'Anima'}]}],[{type: 'paragraph', children: [{text: 'stir fry veggies, cut garlic, add crumbled seA salt and magic'}]}],[{type: 'paragraph', children: [{text: 'Toothbrush'}]}], [{type: 'paragraph', children: [{text: "4.6 mi, 14 min"}]}], [{type: 'paragraph', children: [{text: "messing up is learning, even if it’s embarrassing, you’ll learn from it"}]}]],
+        testNotes: [],//[['Flatiron links', 'Homeroom'], ['Asdf', 'view'], ['Draw Boundaries', 'visuals are important to employers'], ['Task list','Urgent/ASAP'],['Places I want to work','Notion'], ['Wonton noodle soup', 'stir fry veggies, cut garlic, add crumbled seA salt and magic'], ['Packing list','Toothbrush'], ['Notes', "4.6 mi, 14 min"], ['Didi college tips', "messing up is learning, even if it’s embarrassing, you’ll learn from it"]],
+        notesTitle: [],//[{type: 'paragraph', children: [{text: 'Flatiron links'}]},{type: 'paragraph', children: [{text: 'Asdf'}]},{type: 'paragraph', children: [{text: 'Draw Boundaries'}]},{type: 'paragraph', children: [{text: 'Task list'}]},{type: 'paragraph', children: [{text: 'Places I want to work'}]},{type: 'paragraph', children: [{text: 'Wonton noodle soup'}]},{type: 'paragraph', children: [{text: 'Packing list'}]}, {type: 'paragraph', children: [{text: 'Notes'}]}, {type: 'paragraph', children: [{text: 'Didi college tips'}]}],
+        notesContent: [],//[[{type: 'paragraph', children: [{text: 'Homeroom'}]}],[{type: 'paragraph', children: [{text: 'view'}]}],[{type: 'paragraph', children: [{text: 'visuals are important to employers'}]}],[{type: 'paragraph', children: [{text: 'Urgent/ASAP'}]}],[{type: 'paragraph', children: [{text: 'Notion'}]}, {type: 'paragraph', children: [{text: 'Anima'}]}],[{type: 'paragraph', children: [{text: 'stir fry veggies, cut garlic, add crumbled seA salt and magic'}]}],[{type: 'paragraph', children: [{text: 'Toothbrush'}]}], [{type: 'paragraph', children: [{text: "4.6 mi, 14 min"}]}], [{type: 'paragraph', children: [{text: "messing up is learning, even if it’s embarrassing, you’ll learn from it"}]}]],
         index: 0,
-        who: '',         // Did I come from Home or HomeOG? (I'm being used in Slate Editor to conditionally render my back Button)
-        layer: 0,         // HomeOG display term
+        who: '',            // Did I come from Home or HomeOG? (I'm being used in Slate Editor to conditionally render my back Button)
+        layer: 0,           // HomeOG display term
         layerMap: 0,
         filtered: null,
-        root: []
+        root: [],
+        users: [],
+        notesAssoc: [],
+        currentUser: 'Bradley', // Normally this would be null but for testing purposes
+        loginRedirect: false,
     }
 
     // The following two functions are called to set 'current note' so SlateEditor knows who to show
@@ -46,6 +50,10 @@ export default class MainContainer extends Component {
         })
     }
 
+    updateLoginRedirect = (loginRedirect) => this.setState({loginRedirect})
+
+    updateCurrentUser = (currentUser) => this.setState({ currentUser })
+
     updateRedirect = (redirect) => this.setState({ redirect })
 
     updateNotes = (val,idx,who) => {
@@ -62,11 +70,19 @@ export default class MainContainer extends Component {
         }
     }
 
+    // updateNotesContent = (notesContent) => this.setState({ notesContent })
+
+    // updateNotesTitle = (notesTitle) => this.setState({ notesTitle })
+
     updateTestNotes = () => {
         const testNotes = this.state.notesTitle.map(elem => elem.children[0].text).map((elem,index) => {
             return [elem].concat([this.state.notesContent[index].map(elem => (elem.children[0].text+'<br/>')).join('')])
         })
         this.setState({ testNotes }, () => this.setState({currentEditor: this.state.testNotes[this.state.index]}))
+    }
+
+    updateUserNotes = (notesContent, notesTitle, testNotes) => {
+        this.setState({ notesContent, notesTitle, testNotes }/*, this.updateTestNotes*/)
     }
 
     updateWho = (who) => this.setState({ who })
@@ -105,20 +121,48 @@ export default class MainContainer extends Component {
         this.setState({ notesTitle, notesContent, testNotes, index, currentEditor })
     }
 
-    // componentDidMount() {
-    //     this.deleteCurrentNote
-    // }
+    componentDidMount() {
+
+        // RETRIEVE data from Rails server
+        fetch('http://localhost:3000/users')
+            .then(r => r.json())
+            .then(data => {
+                // console.log('users',data)
+                const users = data.map(elem => elem.name)
+                this.setState({ users })
+            })
+
+        fetch('http://localhost:3000/notes')
+            .then(r => r.json())
+            .then(data => {
+                // console.log('notes',data)
+
+                const notesTitle = data.map(elem => elem.title)
+                const notesContent = data.map(elem => [elem.content])
+
+                const notesAssoc = data.map(elem => [elem.id, { userID: elem.user_id}])
+                
+                this.setState({ notesAssoc })
+
+                // console.log('notesTitle, ', notesTitle)
+                // console.log('notesContent, ', notesContent)
+
+                this.setState({ notesTitle, notesContent }, this.updateTestNotes)
+            })
+
+        // Update notesTitle,Content and testNotes to reflect User change
+    }
 
     render() {
         return (
             <div style={{height: '800px'}}>
                 <Switch>
-                    <Route exact path='/'>{Login}</Route>
+                    <Route exact path='/'><Login loginRedirect={this.state.loginRedirect} updateLoginRedirect={this.updateLoginRedirect} updateCurrentUser={this.updateCurrentUser} currentUser={this.state.currentUser} users={this.state.users} notesAssoc={this.state.notesAssoc}/></Route>
                     {/* <Route exact path='/'><Home note={this.state.currentEditor} testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho} updateIndex={this.updateIndex} deleteCurrentNote={this.deleteCurrentNote}/></Route> */}
-                    <Route path='/home'><Home note={this.state.currentEditor} testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho} updateIndex={this.updateIndex} deleteCurrentNote={this.deleteCurrentNote}/></Route>
+                    <Route path='/home'><Home notesTitle={this.state.notesTitle} notesContent={this.state.notesContent} note={this.state.currentEditor} testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho} updateIndex={this.updateIndex} deleteCurrentNote={this.deleteCurrentNote} notesAssoc={this.state.notesAssoc} users={this.state.users} currentUser={this.state.currentUser} updateUserNotes={this.updateUserNotes} filteredPanel={this.state.filteredPanel} updateFilteredPanel={this.updateFilteredPanel}/></Route>
                     <Route path='/homeOG'><HomeOG note={this.state.currentEditor} testClick={this.testClick} testNotes={this.state.testNotes} redirect={this.state.redirect} updateWho={this.updateWho} updateLayer={this.updateLayer} layer={this.state.layer} filtered={this.state.filtered} updateFilter={this.updateFilter}/></Route>
                     <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who} notesTitle={this.state.notesTitle} notesContent={this.state.notesContent}/></Route>
-                    <Route path='/makemap'><MakeMap testNotes={this.state.testNotes} notesTitle={this.state.notesTitle} layerMap={this.state.layerMap} updateLayerMap={this.updateLayerMap} root={this.state.root} updateRoot={this.updateRoot} updateRootModified={this.updateRootModified}/></Route>
+                    <Route path='/makemap'><MakeMap filteredPanel={this.state.filteredPanel} testNotes={this.state.testNotes} notesTitle={this.state.notesTitle} layerMap={this.state.layerMap} updateLayerMap={this.updateLayerMap} root={this.state.root} updateRoot={this.updateRoot} updateRootModified={this.updateRootModified}/></Route>
                 </Switch>
             </div>
         )
