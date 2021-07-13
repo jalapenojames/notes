@@ -43,7 +43,7 @@ export default function Login({ updateCurrentUser, currentUser, users, notesAsso
                     <Form.Label>User Name</Form.Label>
                     <Form.Control type="user" placeholder="Enter user" name="user" />
                     <Form.Text className="text-muted">
-                    We'll never share your name with anyone else. 😉
+                    We'll never share your name with anyone else. 📝
                     </Form.Text>
                 </Form.Group>
 

@@ -15,7 +15,7 @@ export default function PaperDrawing2() {
     myCircle2.fillColor='#66D3FA'
 
     let myCircle = new Paper.Path.Circle(new Paper.Point(300, 300), 50)
-    myCircle.fillColor='powderblue'
+    myCircle.fillColor='#D5F3FE' // powderblue
 
     // Paper.view.onMouseDown = (event) => {
     //   myPath.strokeColor = "white";

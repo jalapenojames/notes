@@ -5,7 +5,9 @@ import PaperCanvas2 from './PaperCanvas2'
 import { BFSdriver } from './MapBFS'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
+import _grid from '../grid.png'
 import Rotate from './Rotate'
+import Rotate2 from './Rotate2'
 
 export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
     const defaultArr = Array(testNotes.length).fill().map((elem,idx) => idx)
@@ -14,6 +16,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     // const [whatsLeft, setWhatsLeft] = useState(defaultArr);
     // const [citizens, setCitizens] = useState([]);
     const [toggle, setToggle] = useState(false);
+    const [grid, setGrid] = useState(false);
 
     const clickedNote = (id) => {
         // console.log('id here is ', id)
@@ -71,6 +74,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             return
         }
     }
+
+    const handleClickGrid = () => setGrid(!grid)
 
     const handleClickChild = (who) => {
         console.log('alright got here', 'clicked: '+who)
@@ -145,7 +150,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const layerMap1 = () => (
         <React.Fragment>
             <div className="d-flex flex-column align-items-center">
-                <br/><br/>
+                <h1 >Create map</h1>
                 <div className=' d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative', zIndex: '1', backgroundColor: '#001C57', borderRadius: '10px'}}>
                     
                     {/* Root node */}
@@ -162,7 +167,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
                 </div>
                 <br/>
-                <h1 style={{margin: '0 0 2% 0'}}>Create map</h1>
                 {/* <br/> */}
                 <div className='row'>
                     <div className='col'>Back</div>
@@ -186,7 +190,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     
                     {/* Containers */}
                     <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57', borderRadius: '10px'}}>
-                        <div id='target' className='rounded-circle' style={{height: '600px', width: '600px', position: 'absolute', zIndex: '-1', backgroundColor: '#001C57'}}>
+                        <div id='target2' className='rounded-circle' style={{height: '600px', width: '600px', position: 'absolute', zIndex: '-1', backgroundColor: '#001C57'}}>
                             <div className='d-flex flex-column align-items-center justify-content-center' style={{color: 'white'}}>
                             {/* Root node */}
                             {/* { root.length>0? rootJSX() : console.log() } */}
@@ -195,8 +199,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                             <div style={{height: '500px', width: '500px', position: 'absolute', zIndex: '-1', top: 0, left: 0}}>
                                 <PaperCanvas2/>
                             </div>
-
-                            <Rotate />
 
                             {/* {example level 1} */}
                             {/* <div className='border border-danger text-orange' style={{position: 'absolute', top: '250px', left: '250px', height: '100px', width: '100px', transform: 'rotate(-45deg)'}}>
@@ -214,17 +216,26 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                             </div> */}
 
                             {/* {Radial Tree} */}
-                            {radialTree2(true)}  
+                            {radialTree2(grid)}  
+
+                            <Rotate />
+                            <Rotate2 />
+
+
 
                             </div>
                         </div>
 
                         {/* layer 1 */}
                         <div className="d-flex flex-column justify-content-center align-items-center">
-                            <p className={`border border-dark bg-primary text-dark rounded d-flex justify-content-center align-items-center`} style={{width: '70px', height: '50px', fontWeight: 'bold', fontSize: '1em', position: 'absolute', top: '250px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p>
+                            <h2 className={`border border-dark bg-primary text-dark rounded d-flex justify-content-center align-items-center`} style={{zIndex: '20', fontWeight: 'bold', position: 'absolute', top: '270px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</h2>
                             {/* Test */}
                             {drawingTest()} 
-                        </div>                        
+                        </div>  
+                         
+                         {/* {Grid Icon} */}
+                        <img onClick={handleClickGrid} src={_grid} alt='grid button' style={{height: '60px', position: 'absolute', top: '650px', left: '700px'}}/>
+                      
                     </div>                    
                 </div>
                 <br/>
@@ -293,16 +304,17 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 {/* {layer 2} */}
                 {Array(lengthLay2).fill().map((elem,i) => {
                     return (
-                        <div className={`${dispAttribute2} text-orange`} style={{position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
-                            <h5><Badge variant='warning'>{testNotes[flattenedRoot[1][i]][0]}</Badge></h5>
+                        <div id='target' className={`${dispAttribute2} text-orange`} style={{ zIndex: '5', position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
+                            <h3><Badge variant='warning'>{testNotes[flattenedRoot[1][i]][0]}</Badge></h3>
                         </div>                        
                     )
                 })}
                 {/* {layer 3} */}
                 {Array(lengthLay3).fill().map((elem,i) =>{
                     return (
-                        <div className={`${dispAttribute3} text-orange`} style={{position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: `rotate(${i*360/lengthLay3}deg)`}}>
-                            <h7><Badge className='text-dark' style={{backgroundColor: '#fb8500'}} /*variant='success'*/>{testNotes[flattenedRoot[2][i]][0]}</Badge></h7>
+                        <div className={`${dispAttribute3} text-orange`} style={{ position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: `rotate(${i*360/lengthLay3}deg)`}}>
+                            <h5><Badge className='' style={{backgroundColor: '#155d27', color: '#D5F3FE'}} /*variant='success'*/>{testNotes[flattenedRoot[2][i]][0]}</Badge></h5>
+                            {/* {'#fb8500' text-dark fefae0} */}
                         </div>
                     )
                 })}
@@ -339,7 +351,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
      
 
         return (
-            <h5 className='text-dark' style={{position: 'absolute', top: '300px'}}>🍗tabTree</h5>
+            <h5 className='text-dark' style={{position: 'absolute', top: '310px'}}>🍗tabTree</h5>
         )
 
     }
