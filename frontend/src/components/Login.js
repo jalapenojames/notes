@@ -2,6 +2,7 @@ import React from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Link,Redirect } from 'react-router-dom'
+import PaperCanvas from './PaperCanvas'
 
 export default function Login({ updateCurrentUser, currentUser, users, notesAssoc, loginRedirect, updateLoginRedirect }) {
 
@@ -30,8 +31,11 @@ export default function Login({ updateCurrentUser, currentUser, users, notesAsso
     }
 
     return (
-        <div className='d-flex row align-items-center justify-content-center' style={{height: '100%'}}>
-            <Form onSubmit={(e) => handleSubmit(e)} id='loginForm'>
+        <div className='d-flex row align-items-center justify-content-center' style={{height: '100%', position: 'relative'}}>
+            <div className='' style={{height: '800px', width: '800px', position: 'absolute', zIndex: '1', top: 0}}>
+                <PaperCanvas />
+            </div>
+            <Form onSubmit={(e) => handleSubmit(e)} id='loginForm' style={{zIndex: '10'}}>
                 <h1 style={{marginBottom: '40%', fontSize: '3em', fontFamily: 'Quicksand'}}>Login</h1>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>User Name</Form.Label>
@@ -43,7 +47,7 @@ export default function Login({ updateCurrentUser, currentUser, users, notesAsso
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" name="pass" />
+                    <Form.Control disabled type="password" placeholder="Password" name="pass" />
                 </Form.Group>
                 <Form.Group controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Have a good day?" />

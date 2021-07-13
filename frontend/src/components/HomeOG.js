@@ -96,7 +96,7 @@ export default class HomeOG extends Component {
                     <div className='col' style={{position: 'absolute', left: '500px'}}>
                         <Link to='/home'><img src={_arrow} alt='arrow' style={{height: '15px'}}/></Link>
                         <img src={_plus} alt='plus sign' style={{height: '15px'}}/>
-                        <img src={_test} alt='plus sign' style={{height: '100px'}}/>
+                        {/* <img src={_test} alt='plus sign' style={{height: '100px'}}/> */}
                     </div>
                 </div>
                 {this.props.redirect===1? <Redirect to='/editor'/> : console.log() }

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Interweave from 'interweave';import Badge from 'react-bootstrap/Badge'
+import PaperCanvas2 from './PaperCanvas2'
 import { BFSdriver } from './MapBFS'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
@@ -128,11 +130,9 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         <React.Fragment>
             <div className="d-flex flex-column align-items-center">
                 <h1>Pick your root</h1>
-                <p>MapField</p>
                 <br/><br/>
                 <br/><br/>
-                <p>your root goes here when selected:</p>
-                {root.length>0? <p className='border border-secondary rounded' style={{width: '200px'}}>{lessThanFifteen(testNotes[root[0].who][0])}</p> : <p className='' style={{width: '200px'}}>_</p>}
+                {root.length>0? <h2><Badge variant="dark" className='border border-secondary rounded' /*style={{width: '200px'}}*/>{lessThanFifteen(testNotes[root[0].who][0], 20)}</Badge></h2> : <p>your root goes here when selected</p>}
                 {/* {console.log(root.length)} */}
                 <br/><br/>
                 Next<img onClick={handleClick0Arrow} src={_next} alt='next arrow' style={{height: '60px'}}/>
@@ -144,7 +144,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const layerMap1 = () => (
         <React.Fragment>
             <div className="d-flex flex-column align-items-center">
-                <h1>Add a child</h1>
+                <h1>Create map</h1>
                 {/* <br/><br/> */}
                 <div className=' d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative', zIndex: '1', backgroundColor: '#001C57'}}>
                     
@@ -155,7 +155,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     {root.length>0? drawing() : console.log()}
 
                     {/* Square frame */}
-                    {/* <div style={{transform: 'rotate(45deg)', border: 'solid white 2px', height: '100px', width: '100px', position: 'absolute'}}>square</div> */}
+                    <div style={{zIndex: '-1', transform: 'rotate(45deg)', border: 'solid white 2px', height: '100px', width: '100px', position: 'absolute'}}>square</div>
 
                 </div>
                 <br/>
@@ -186,14 +186,36 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                             {/* Root node */}
                             {/* { root.length>0? rootJSX() : console.log() } */}
                             
-                            {/* Drawing */}
-                            {/* {drawing()} */}
+                            {/* Circles with Paper.js */}
+                            <div style={{height: '500px', width: '500px', position: 'absolute', zIndex: '-1', top: 0, left: 0}}>
+                                <PaperCanvas2 />
+                            </div>
+
+                            {/* {example level 1} */}
+                            {/* <div className='border border-danger text-orange' style={{position: 'absolute', top: '250px', left: '250px', height: '100px', width: '100px', transform: 'rotate(-45deg)'}}>
+                                <div><Badge variant='secondary'>asdf</Badge></div>
+                            </div> */}
+
+                            {/* {example level 2} */}
+                            {/* <div className='border border-info text-orange' style={{position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: 'rotate(45deg)'}}>
+                                <div><Badge variant='secondary'>asdf</Badge></div>
+                            </div> */}
+
+                            {/* {example level 3} */}
+                            {/* <div className='border border-warning text-orange' style={{position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: 'rotate(-45deg)'}}>
+                                <div><Badge variant='secondary'>asdf</Badge></div>
+                            </div> */}
+
+                            {/* {Radial Tree} */}
+                            {
+                                radialTree2()
+                            }
 
                             {/* Test */}
                             {drawingTest()}   
 
                             {/* Tab Tree */}
-                            {tabTree()}
+                            {/* {tabTree()} */}
                              
                             </div>
                     </div>                    
@@ -212,20 +234,133 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         </React.Fragment>        
     )
 
-    const tabTree = () => {
+    const radialTree2 = () => {
         const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        console.log('root', flattenedRoot)
-        console.log('edges', evalMakeEdges(root))
+        console.log(flattenedRoot)
+        console.log(flattenedRoot.join(''))
+
+        let len = 3
+        if(flattenedRoot.length<3)
+            len=flattenedRoot.length
+
+                // Limit to 3
+                const limitedTo3 = Array(len).fill().map((elem,i) => flattenedRoot[i])
+        
+        console.log(limitedTo3)
+
+        const divAngles = limitedTo3.map(elem=> {
+            const count = elem.length
+            const angleMultiple = 360/count
+            const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
+            // Return Array of rotation angles for each layer
+            return angleArray
+        })
+        console.log(divAngles)
+
+        // Layer 2
+        let lengthLay2=0
+        if(flattenedRoot[1] || flattenedRoot[1]===0)
+            lengthLay2 = flattenedRoot[1].length
+
+        // Layer 3
+        // will need to have conditional if root has NO children
+        let lengthLay3=0
+        if(flattenedRoot[2] || flattenedRoot[2]===0)
+            lengthLay3 = flattenedRoot[2].length            
 
         return (
             <React.Fragment>
-                <h5>tabTree</h5>
+                {/* layer 1 */}
+                <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p>
+                {/* {layer 2} */}
+                {Array(lengthLay2).fill().map((elem,i) => {
+                    return (
+                        <div className='border border-info text-orange' style={{position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
+                            <h5><Badge variant='warning'>asdf</Badge></h5>
+                        </div>                        
+                    )
+                })}
+                {/* {layer 3} */}
+                {Array(lengthLay3).fill().map((elem,i) =>{
+                    return (
+                        <div className='border border-warning text-orange' style={{position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: `rotate(${i*360/lengthLay3}deg)`}}>
+                            <h7><Badge variant='success'>asdf</Badge></h7>
+                        </div>
+                    )
+                })}
+            </React.Fragment>
+        )
+    }
+
+    const radialTree = () => {
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        console.log(flattenedRoot)
+        console.log(flattenedRoot.join(''))
+
+        let len = 3
+        if(flattenedRoot.length<3)
+            len=flattenedRoot.length
+
+                // Limit to 3
+                const limitedTo3 = Array(len).fill().map((elem,i) => flattenedRoot[i])
+        
+        console.log(limitedTo3)
+
+        const divAngles = limitedTo3.map(elem=> {
+            const count = elem.length
+            const angleMultiple = 360/count
+            const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
+            // Return Array of rotation angles for each layer
+            return angleArray
+        })
+        console.log(divAngles)
+
+        // Print Divs with appropriate values2
+        //              1   2       3
+        // Top/Left,    n/a 200px, 100px
+        // Height,      n/a 200px, 400px
+        const values = [['','','none'],[200,200,'block'],[100,400,'block']]
+
+        // const divs = divAngles.map((elem,indexR) => {
+        //     return elem.map((e,indexC) => (
+        //         <div className='border border-warning text-orange' style={{display: `${values[indexR][2]}`, position: 'absolute', top: `${values[indexR][0]}`, left: `${values[indexR][0]}`, height: `${values[indexR][1]}`, width: `${values[indexR][1]}`, transform: `rotate(${e}deg)`}}>
+        //             <div><Badge variant='secondary'>asdf</Badge></div>
+        //         </div>
+        //     ))
+        // })
+
+        const divs = divAngles.map((elem,indexR) => {
+            return elem.map((e,indexC) => (
+                `<div className='border border-warning text-orange' style={{display: '${values[indexR][2]}', position: 'absolute', top: '${values[indexR][0]}'', left: '${values[indexR][0]}', height: '${values[indexR][1]}', width: '${values[indexR][1]}', transform: 'rotate(${e}deg)'}}><div><Badge variant='secondary'>asdf</Badge></div></div>`
+            ))
+        })
+
+        console.log(divs)
+
+        return divs
+
+        // (3) [Array(1), Array(2), Array(3)]       // DIV ANGLES
+        // 0: [0]
+        // 1: (2) [0, 180]
+        // 2: (3) [0, 120, 240]
+        // length: 3        
+    }
+
+    const tabTree = () => {
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        // console.log('root', flattenedRoot)
+        // console.log('edges', evalMakeEdges(root))
+
+        return (
+            <React.Fragment>
+                <h5 style={{color: 'black'}}>tabTree</h5>
                 <div>{flattenedRoot.map(elem => (
                     <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
                 ))}</div>
             </React.Fragment>
         )
     }
+
     const drawing = () => {
         const flattenedRoot = evalFlattenedOb(flattenObject(root))
         // console.log('root', flattenedRoot)
@@ -233,7 +368,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         return (
             <div>{flattenedRoot.splice(1,flattenedRoot.length-1).map(elem => (
-                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p id={'Tag'+e} onClick={()=>clickedMapNote(e)} className='bg-primary text-white border border-dark rounded' style={{width: '70px', marginTop: '5%'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
+                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <h5><Badge id={'Tag'+e} onClick={()=>clickedMapNote(e)} className='bg-primary text-white border border-dark rounded' style={{width: '70px', marginTop: '5%'}}>{lessThanFifteen(testNotes[e][0],9)}</Badge></h5> )}</div>
             ))}</div>
         )
     }
@@ -253,7 +388,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
 
 
-        console.log(flattenObject(root))
+        // console.log(flattenObject(root))
         const depth = Object.keys(flattenObject(root)).map(elem => elem.split('.').length/2)
         const vals = Object.values(flattenObject(root))
 
@@ -271,11 +406,12 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         return (<div>
             {/* {'testing'} */}
             {/* {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)} */}
-            {map.map((elem,indexR) => <div className='row'>{Array(map[indexR].length).fill().map(elem => <div className='col'>🍗</div>)}</div>)}
+            {/* {map.map((elem,indexR) => <div className='row'>{Array(map[indexR].length).fill().map(elem => <div className='col'>🍗</div>)}</div>)} */}
+            🍗
         </div>)
     }
 
-    const rootJSX = () => <p onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{width: '60px', margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</p>
+    const rootJSX = () => <h2><Badge onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{ margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</Badge></h2>
 
     useEffect(()=>{
         // Reset Root upon render
@@ -285,12 +421,38 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // Reset selected id
         setValue('')
 
-        // Testing 
-        // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
-        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
-        const testNM = [{who: 6, children: [{who: 4, children: null}]}]
-        const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
-        const testRootOnly = [{who: 6, children: null}]
+        // Testing ground
+        // const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
+
+        // const flattenedRoot = evalFlattenedOb(flattenObject(test4))
+        // console.log(flattenedRoot)
+
+        // // Limit to 3
+        // const limitedTo3 = Array(2).fill().map((elem,i) => flattenedRoot[i])
+        // console.log(limitedTo3)
+
+        // const divAngles = flattenedRoot.map(elem=> {
+        //     const count = elem.length
+        //     const angleMultiple = 360/count
+        //     const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
+        //     // Return Array of rotation angles for each layer
+        //     return angleArray
+        // })
+        // console.log(divAngles)
+
+                // const divs = [['<div>a</div>'],['<div>b</div>','<div>c</div>']]
+
+                // console.log(divs.map(elem => elem.map((e) => <Interweave content={e}/>)))
+                // console.log(Array(2).fill().map((elem,i) => {
+                //     return <Interweave content={divs[i]}/>
+                // }))
+                // console.log(<Interweave content={divs[0]}/>)
+                // console.log(<Interweave content={divs[1].split(',').join}/>)
+
+        // console.log(<Interweave content={}/>)
+
+
+
     },[])
 
     const findPathWho = (tree, who) => {
@@ -377,7 +539,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     // Display Root's children in JSX render
     useEffect(()=>{
-        root.length>0? displayRoot(root) : console.log()
+        // root.length>0? displayRoot(root) : console.log()
     },[toggle])
 
     useEffect(()=>{
@@ -621,6 +783,13 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 }
 
 // Graveyard
+
+        // Testing 
+        // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
+        // const testNM = [{who: 6, children: [{who: 4, children: null}]}]
+        // const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
+        // const testRootOnly = [{who: 6, children: null}]
 
                             {/* Child node */}
                             {/* { root.length>0? mapTree2(root, []).slice(1, mapTree2(root, []).length).join(', ') : console.log() } */}

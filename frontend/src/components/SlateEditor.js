@@ -23,7 +23,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 
               updateNotes(newValue[0], index, 'title')
           }}>
-          <Editable style={{ /*border: "1px solid black",*/ borderBottom: 'none', height: '30px', width: '300px', fontFamily: '', fontSize: '2em', fontWeight: 'bold'}}/>
+          <Editable style={{ /*border: "1px solid black",*/ borderBottom: 'none', height: '30px', width: '400px', fontFamily: '', fontSize: '2em', fontWeight: 'bold'}}/>
         </Slate>
           <br/>
         <Slate editor={editor} value={value} onChange={(newValue) => {

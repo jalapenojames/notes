@@ -5,6 +5,7 @@ import HomeOG from '../components/HomeOG'
 import Login from '../components/Login'
 import SlateEditor from '../components/SlateEditor'
 import MakeMap from '../components/MakeMap'
+import PaperCanvas from '../components/PaperCanvas'
 
 export default class MainContainer extends Component {
 
@@ -69,10 +70,6 @@ export default class MainContainer extends Component {
             this.setState({notesContent}, this.updateTestNotes)
         }
     }
-
-    // updateNotesContent = (notesContent) => this.setState({ notesContent })
-
-    // updateNotesTitle = (notesTitle) => this.setState({ notesTitle })
 
     updateTestNotes = () => {
         const testNotes = this.state.notesTitle.map(elem => elem.children[0].text).map((elem,index) => {
@@ -163,6 +160,7 @@ export default class MainContainer extends Component {
                     <Route path='/homeOG'><HomeOG note={this.state.currentEditor} testClick={this.testClick} testNotes={this.state.testNotes} redirect={this.state.redirect} updateWho={this.updateWho} updateLayer={this.updateLayer} layer={this.state.layer} filtered={this.state.filtered} updateFilter={this.updateFilter}/></Route>
                     <Route path='/editor'><SlateEditor note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who} notesTitle={this.state.notesTitle} notesContent={this.state.notesContent}/></Route>
                     <Route path='/makemap'><MakeMap filteredPanel={this.state.filteredPanel} testNotes={this.state.testNotes} notesTitle={this.state.notesTitle} layerMap={this.state.layerMap} updateLayerMap={this.updateLayerMap} root={this.state.root} updateRoot={this.updateRoot} updateRootModified={this.updateRootModified}/></Route>
+                    <Route path='/canvas'><PaperCanvas/></Route>
                 </Switch>
             </div>
         )

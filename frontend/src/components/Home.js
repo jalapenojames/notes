@@ -30,7 +30,7 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
         console.log(newTitle)
         console.log(newContent)
 
-        updateUserNotes(newTitle,newContent, newTestNotes)
+        // updateUserNotes(newTitle,newContent, newTestNotes)
     }, [])
 
     const returnSelected = (original, filter) => {
