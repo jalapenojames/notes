@@ -50,8 +50,8 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
     }
 
     return (
-        <div className='d-flex flex-column align-items-center justify-content-center' style={{height: '100%'}}>
-            {/* <p style={{marginBottom: '160px', fontFamily: 'quicksand', fontSize: '1.5em', alignSelf: 'start', paddingLeft: '100px'}}>Welcome, {currentUser}</p> */}
+        <div className='d-flex flex-row align-items-center justify-content-center' style={{height: '100%'}}>
+            <p style={{marginBottom: '160px', fontFamily: 'quicksand', fontSize: '1.5em', paddingRight: '10%'}}>Welcome, {currentUser}</p>
             <div className='d-flex flex-row' style={{position: 'relative'}}>
                 <div className='col d-flex justify-content-end' style={{paddingRight: '5%'}}><div className='d-flex align-items-center'><div style={{fontFamily: 'Times New Roman', fontSize: '4em'}}>Notes</div></div></div>
                 <div className='col' style={{height: '300px', overflowY: 'auto', whiteSpace: 'nowrap', maxWidth: '500px'}}>

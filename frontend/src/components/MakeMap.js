@@ -5,6 +5,7 @@ import PaperCanvas2 from './PaperCanvas2'
 import { BFSdriver } from './MapBFS'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
+import Rotate from './Rotate'
 
 export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, updateRoot, testNotes }) {
     const defaultArr = Array(testNotes.length).fill().map((elem,idx) => idx)
@@ -144,9 +145,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const layerMap1 = () => (
         <React.Fragment>
             <div className="d-flex flex-column align-items-center">
-                <h1>Create map</h1>
-                {/* <br/><br/> */}
-                <div className=' d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative', zIndex: '1', backgroundColor: '#001C57'}}>
+                <br/><br/>
+                <div className=' d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative', zIndex: '1', backgroundColor: '#001C57', borderRadius: '10px'}}>
                     
                     {/* Root node */}
                     {root.length>0? rootJSX() : console.log()}
@@ -155,10 +155,14 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     {root.length>0? drawing() : console.log()}
 
                     {/* Square frame */}
-                    <div style={{zIndex: '-1', transform: 'rotate(45deg)', border: 'solid white 2px', height: '100px', width: '100px', position: 'absolute'}}>square</div>
+                    {/* <div style={{zIndex: '-1', transform: 'rotate(45deg)', border: 'solid white 2px', height: '100px', width: '100px', position: 'absolute'}}>square</div> */}
+
+                    {/* {Tree Emoji} */}
+                    <div style={{zIndex: '-1', height: '100px', width: '100px', position: 'absolute', fontSize: '4em', top: '400px'}}>🌳</div>
 
                 </div>
                 <br/>
+                <h1 style={{margin: '0 0 2% 0'}}>Create map</h1>
                 {/* <br/> */}
                 <div className='row'>
                     <div className='col'>Back</div>
@@ -178,18 +182,21 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             <div className="d-flex flex-column align-items-center">
                 <h1>Note Map</h1>
                 {/* <br/><br/> */}
-                <div className='bg-secondary d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
+                <div /*id='target'*/ className='d-flex flex-column align-items-center justify-content-center' style={{height: '600px', width: '600px', position: 'relative'}}>
                     
                     {/* Containers */}
-                    <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57'}}>
+                    <div className='d-flex flex-column align-items-center justify-content-center' style={{position: 'absolute', height: '600px', width: '600px', opacity: '1', zIndex: '1', backgroundColor: '#001C57', borderRadius: '10px'}}>
+                        <div id='target' className='rounded-circle' style={{height: '600px', width: '600px', position: 'absolute', zIndex: '-1', backgroundColor: '#001C57'}}>
                             <div className='d-flex flex-column align-items-center justify-content-center' style={{color: 'white'}}>
                             {/* Root node */}
                             {/* { root.length>0? rootJSX() : console.log() } */}
                             
                             {/* Circles with Paper.js */}
                             <div style={{height: '500px', width: '500px', position: 'absolute', zIndex: '-1', top: 0, left: 0}}>
-                                <PaperCanvas2 />
+                                <PaperCanvas2/>
                             </div>
+
+                            <Rotate />
 
                             {/* {example level 1} */}
                             {/* <div className='border border-danger text-orange' style={{position: 'absolute', top: '250px', left: '250px', height: '100px', width: '100px', transform: 'rotate(-45deg)'}}>
@@ -207,17 +214,17 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                             </div> */}
 
                             {/* {Radial Tree} */}
-                            {
-                                radialTree2()
-                            }
+                            {radialTree2(true)}  
 
-                            {/* Test */}
-                            {drawingTest()}   
-
-                            {/* Tab Tree */}
-                            {/* {tabTree()} */}
-                             
                             </div>
+                        </div>
+
+                        {/* layer 1 */}
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                            <p className={`border border-dark bg-primary text-dark rounded d-flex justify-content-center align-items-center`} style={{width: '70px', height: '50px', fontWeight: 'bold', fontSize: '1em', position: 'absolute', top: '250px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p>
+                            {/* Test */}
+                            {drawingTest()} 
+                        </div>                        
                     </div>                    
                 </div>
                 <br/>
@@ -234,7 +241,14 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         </React.Fragment>        
     )
 
-    const radialTree2 = () => {
+    const radialTree2 = (toggle) => {
+        // const toggle = false
+
+        const borderPalette = ['dark', 'info', 'warning']
+        const dispAttribute1 = toggle? `border border-${borderPalette[0]}` : `border border-${borderPalette[0]}`
+        const dispAttribute2 = toggle? `border border-${borderPalette[1]}` : ''
+        const dispAttribute3 = toggle? `border border-${borderPalette[2]}` : ''
+
         const flattenedRoot = evalFlattenedOb(flattenObject(root))
         console.log(flattenedRoot)
         console.log(flattenedRoot.join(''))
@@ -271,92 +285,27 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         return (
             <React.Fragment>
                 {/* layer 1 */}
-                <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p>
+                {/* <div className="d-flex flex-column justify-content-center align-items-center">
+                    <p className={`border border-dark bg-primary text-dark ${dispAttribute1} rounded d-flex justify-content-center align-items-center`} style={{width: '70px', height: '50px', fontWeight: 'bold', fontSize: '1em', position: 'absolute', top: '250px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p> */}
+                    {/* Test */}
+                    {/* {drawingTest()}  */}
+                {/* </div> */}
                 {/* {layer 2} */}
                 {Array(lengthLay2).fill().map((elem,i) => {
                     return (
-                        <div className='border border-info text-orange' style={{position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
-                            <h5><Badge variant='warning'>asdf</Badge></h5>
+                        <div className={`${dispAttribute2} text-orange`} style={{position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
+                            <h5><Badge variant='warning'>{testNotes[flattenedRoot[1][i]][0]}</Badge></h5>
                         </div>                        
                     )
                 })}
                 {/* {layer 3} */}
                 {Array(lengthLay3).fill().map((elem,i) =>{
                     return (
-                        <div className='border border-warning text-orange' style={{position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: `rotate(${i*360/lengthLay3}deg)`}}>
-                            <h7><Badge variant='success'>asdf</Badge></h7>
+                        <div className={`${dispAttribute3} text-orange`} style={{position: 'absolute', top: '100px', left: '100px', height: '400px', width: '400px', transform: `rotate(${i*360/lengthLay3}deg)`}}>
+                            <h7><Badge className='text-dark' style={{backgroundColor: '#fb8500'}} /*variant='success'*/>{testNotes[flattenedRoot[2][i]][0]}</Badge></h7>
                         </div>
                     )
                 })}
-            </React.Fragment>
-        )
-    }
-
-    const radialTree = () => {
-        const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        console.log(flattenedRoot)
-        console.log(flattenedRoot.join(''))
-
-        let len = 3
-        if(flattenedRoot.length<3)
-            len=flattenedRoot.length
-
-                // Limit to 3
-                const limitedTo3 = Array(len).fill().map((elem,i) => flattenedRoot[i])
-        
-        console.log(limitedTo3)
-
-        const divAngles = limitedTo3.map(elem=> {
-            const count = elem.length
-            const angleMultiple = 360/count
-            const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
-            // Return Array of rotation angles for each layer
-            return angleArray
-        })
-        console.log(divAngles)
-
-        // Print Divs with appropriate values2
-        //              1   2       3
-        // Top/Left,    n/a 200px, 100px
-        // Height,      n/a 200px, 400px
-        const values = [['','','none'],[200,200,'block'],[100,400,'block']]
-
-        // const divs = divAngles.map((elem,indexR) => {
-        //     return elem.map((e,indexC) => (
-        //         <div className='border border-warning text-orange' style={{display: `${values[indexR][2]}`, position: 'absolute', top: `${values[indexR][0]}`, left: `${values[indexR][0]}`, height: `${values[indexR][1]}`, width: `${values[indexR][1]}`, transform: `rotate(${e}deg)`}}>
-        //             <div><Badge variant='secondary'>asdf</Badge></div>
-        //         </div>
-        //     ))
-        // })
-
-        const divs = divAngles.map((elem,indexR) => {
-            return elem.map((e,indexC) => (
-                `<div className='border border-warning text-orange' style={{display: '${values[indexR][2]}', position: 'absolute', top: '${values[indexR][0]}'', left: '${values[indexR][0]}', height: '${values[indexR][1]}', width: '${values[indexR][1]}', transform: 'rotate(${e}deg)'}}><div><Badge variant='secondary'>asdf</Badge></div></div>`
-            ))
-        })
-
-        console.log(divs)
-
-        return divs
-
-        // (3) [Array(1), Array(2), Array(3)]       // DIV ANGLES
-        // 0: [0]
-        // 1: (2) [0, 180]
-        // 2: (3) [0, 120, 240]
-        // length: 3        
-    }
-
-    const tabTree = () => {
-        const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        // console.log('root', flattenedRoot)
-        // console.log('edges', evalMakeEdges(root))
-
-        return (
-            <React.Fragment>
-                <h5 style={{color: 'black'}}>tabTree</h5>
-                <div>{flattenedRoot.map(elem => (
-                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
-                ))}</div>
             </React.Fragment>
         )
     }
@@ -374,20 +323,6 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     }
 
     const drawingTest = () => {
-        // const test3 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null},{who: '1.2.5', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
-        // const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
-
-        // console.log(mapTree3(test3,[]))
-
-        // const tree = mapTree3(test3,[])
-
-        // const citizens = mapTree2(root, []).slice(1, mapTree2(root, []).length) // .join(', ')
-        // const everybody = mapTree2(root, [])
-
-        // root.length>0? root[0].children? console.log('citizens: ' + citizens) : console.log() : console.log()
-        // root.length>0? root[0].children? console.log('everybody: ' + everybody) : console.log() : console.log()
-
-
         // console.log(flattenObject(root))
         const depth = Object.keys(flattenObject(root)).map(elem => elem.split('.').length/2)
         const vals = Object.values(flattenObject(root))
@@ -403,12 +338,10 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // console.log(map)
      
 
-        return (<div>
-            {/* {'testing'} */}
-            {/* {tree.map(elem => <div className='row'>{Array(elem.length).fill().map(elem => <div className='col'>🥬</div>)}</div>)} */}
-            {/* {map.map((elem,indexR) => <div className='row'>{Array(map[indexR].length).fill().map(elem => <div className='col'>🍗</div>)}</div>)} */}
-            🍗
-        </div>)
+        return (
+            <h5 className='text-dark' style={{position: 'absolute', top: '300px'}}>🍗tabTree</h5>
+        )
+
     }
 
     const rootJSX = () => <h2><Badge onClick={()=>clickedMapNote(root[0].who)} className='bg-dark text-white border border-dark rounded' style={{ margin: 0}}>{lessThanFifteen(testNotes[root[0].who][0],10)}</Badge></h2>
@@ -421,39 +354,11 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // Reset selected id
         setValue('')
 
-        // Testing ground
-        // const test4 = [{who: '1', children: [{who: '2', children: [{who: '3', children: null},{who: '5', children: null}]}, {who: '4', children: [{who: '0', children: null}]}]}]
-
-        // const flattenedRoot = evalFlattenedOb(flattenObject(test4))
-        // console.log(flattenedRoot)
-
-        // // Limit to 3
-        // const limitedTo3 = Array(2).fill().map((elem,i) => flattenedRoot[i])
-        // console.log(limitedTo3)
-
-        // const divAngles = flattenedRoot.map(elem=> {
-        //     const count = elem.length
-        //     const angleMultiple = 360/count
-        //     const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
-        //     // Return Array of rotation angles for each layer
-        //     return angleArray
-        // })
-        // console.log(divAngles)
-
-                // const divs = [['<div>a</div>'],['<div>b</div>','<div>c</div>']]
-
-                // console.log(divs.map(elem => elem.map((e) => <Interweave content={e}/>)))
-                // console.log(Array(2).fill().map((elem,i) => {
-                //     return <Interweave content={divs[i]}/>
-                // }))
-                // console.log(<Interweave content={divs[0]}/>)
-                // console.log(<Interweave content={divs[1].split(',').join}/>)
-
-        // console.log(<Interweave content={}/>)
-
 
 
     },[])
+
+
 
     const findPathWho = (tree, who) => {
         // initialization
@@ -757,7 +662,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
 
             {/* { PANEL } */}
-            <div className='d-flex align-items-center' style={{height: '100%', borderRight: 'solid 1px black', position: 'relative'}}>
+            <div className='d-flex align-items-center' style={{height: '100%'/*, borderRight: 'solid 1px black'*/, position: 'relative'}}>
                 <div className='' style={{position: 'absolute', height: '80px', width: '80px', top: '120px', left: '100px'}}><Link to='/home' className='noteTitle'>back</Link> </div>
                 <div className='d-flex align-items-center' style={{width: '300px', height: '500px'}}>
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
@@ -765,7 +670,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                         {/* but it will look like [0,3,4,5] */}
                         {whichList().map((elem,index) => (
                             <li onClick={() => clickedNote(elem)} className='col' style={{width: '200px', listStyleType: 'none', pointerEvents: `${conditional('none','auto',elem)}`}}>
-                                <p className='border border-secondary rounded' style={{backgroundColor: `${conditional('gray','green',elem)}`, color: `${conditional('black','white',elem)}`}}>{lessThanFifteen(notesTitle[elem].children[0].text,18)}</p>
+                                <p className='rounded'/*'border border-secondary rounded'*/ style={{backgroundColor: `${conditional('gray','green',elem)}`, color: `${conditional('black','white',elem)}`, fontWeight: 'bold', fontSize: '1.2em'}}>{lessThanFifteen(notesTitle[elem].children[0].text,18)}</p>
                             </li>                                                
                         ))}
                     </ul>  
@@ -830,7 +735,20 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                     {/* First child */}
                     {/* {root.length>0? root[0].children? <p className='bg-primary text-white border border-dark rounded' style={{width: '150px'}}>{console.log(root[0].children[0].who)}{lessThanFifteen(testNotes[root[0].children[0].who][0],18)}</p> : <p className='' style={{width: '200px'}}>_</p> : <p className='' style={{width: '200px'}}>_</p> } */}
 
-
+                    // const tabTree = () => {
+                    //     const flattenedRoot = evalFlattenedOb(flattenObject(root))
+                    //     // console.log('root', flattenedRoot)
+                    //     // console.log('edges', evalMakeEdges(root))
+                
+                    //     return (
+                    //         <React.Fragment>
+                    //             <h5 className='text-dark'>tabsTree</h5>
+                    //             {/* <div>{flattenedRoot.map(elem => (
+                    //                 <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <p className='bg-primary text-white border border-dark rounded' style={{width: '70px'}}>{lessThanFifteen(testNotes[e][0],9)}</p> )}</div>
+                    //             ))}</div> */}
+                    //         </React.Fragment>
+                    //     )
+                    // }
 
         // old actionDisplay f-n: 
         // const valNum = val.toString().split('.')[val.toString().split('.').length-1]    // Retrieve last number in path name e.g. 4.1.3 => "3"
@@ -944,3 +862,57 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
         // depth.map((elem, i) => vals[i]? map[elem-1].push(vals[i]) : console.log())
 
         // console.log(map)
+
+        // const radialTree = () => {
+        //     const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        //     console.log(flattenedRoot)
+        //     console.log(flattenedRoot.join(''))
+    
+        //     let len = 3
+        //     if(flattenedRoot.length<3)
+        //         len=flattenedRoot.length
+    
+        //             // Limit to 3
+        //             const limitedTo3 = Array(len).fill().map((elem,i) => flattenedRoot[i])
+            
+        //     console.log(limitedTo3)
+    
+        //     const divAngles = limitedTo3.map(elem=> {
+        //         const count = elem.length
+        //         const angleMultiple = 360/count
+        //         const angleArray = Array(count).fill().map((e2,i) => i*angleMultiple) // [0,1,2] => [0,120,240]
+        //         // Return Array of rotation angles for each layer
+        //         return angleArray
+        //     })
+        //     console.log(divAngles)
+    
+        //     // Print Divs with appropriate values2
+        //     //              1   2       3
+        //     // Top/Left,    n/a 200px, 100px
+        //     // Height,      n/a 200px, 400px
+        //     const values = [['','','none'],[200,200,'block'],[100,400,'block']]
+    
+        //     // const divs = divAngles.map((elem,indexR) => {
+        //     //     return elem.map((e,indexC) => (
+        //     //         <div className='border border-warning text-orange' style={{display: `${values[indexR][2]}`, position: 'absolute', top: `${values[indexR][0]}`, left: `${values[indexR][0]}`, height: `${values[indexR][1]}`, width: `${values[indexR][1]}`, transform: `rotate(${e}deg)`}}>
+        //     //             <div><Badge variant='secondary'>asdf</Badge></div>
+        //     //         </div>
+        //     //     ))
+        //     // })
+    
+        //     const divs = divAngles.map((elem,indexR) => {
+        //         return elem.map((e,indexC) => (
+        //             `<div className='border border-warning text-orange' style={{display: '${values[indexR][2]}', position: 'absolute', top: '${values[indexR][0]}'', left: '${values[indexR][0]}', height: '${values[indexR][1]}', width: '${values[indexR][1]}', transform: 'rotate(${e}deg)'}}><div><Badge variant='secondary'>asdf</Badge></div></div>`
+        //         ))
+        //     })
+    
+        //     console.log(divs)
+    
+        //     return divs
+    
+        //     // (3) [Array(1), Array(2), Array(3)]       // DIV ANGLES
+        //     // 0: [0]
+        //     // 1: (2) [0, 180]
+        //     // 2: (3) [0, 120, 240]
+        //     // length: 3        
+        // }

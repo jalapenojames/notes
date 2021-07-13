@@ -3,6 +3,8 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Link,Redirect } from 'react-router-dom'
 import PaperCanvas from './PaperCanvas'
+import Rotate from './Rotate'
+
 
 export default function Login({ updateCurrentUser, currentUser, users, notesAssoc, loginRedirect, updateLoginRedirect }) {
 
@@ -31,17 +33,17 @@ export default function Login({ updateCurrentUser, currentUser, users, notesAsso
     }
 
     return (
-        <div className='d-flex row align-items-center justify-content-center' style={{height: '100%', position: 'relative'}}>
+        <div className='d-flex flex-column align-items-center justify-content-center' style={{height: '100%', position: 'relative'}}>
             <div className='' style={{height: '800px', width: '800px', position: 'absolute', zIndex: '1', top: 0}}>
                 <PaperCanvas />
             </div>
+            <h1 style={{marginBottom: '10%', fontSize: '5em', fontFamily: 'Quicksand'}}>Notemap</h1>
             <Form onSubmit={(e) => handleSubmit(e)} id='loginForm' style={{zIndex: '10'}}>
-                <h1 style={{marginBottom: '40%', fontSize: '3em', fontFamily: 'Quicksand'}}>Login</h1>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>User Name</Form.Label>
                     <Form.Control type="user" placeholder="Enter user" name="user" />
                     <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
+                    We'll never share your name with anyone else. 😉
                     </Form.Text>
                 </Form.Group>
 
@@ -55,6 +57,7 @@ export default function Login({ updateCurrentUser, currentUser, users, notesAsso
                 {/* <Link to='/home'><Button variant="secondary" type="submit">Submit</Button></Link> */}
                 <Button variant="secondary" type="submit">Submit</Button>
             </Form>
+            <Rotate />
             {/* {Redirect} */}
             {loginRedirect? <Redirect to='/home'/> : console.log()}
         </div>
