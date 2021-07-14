@@ -55,6 +55,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             // console.log([{ who: who, children: null}])
             updateRoot(root)
             setToggle(!toggle)
+            setValue('')
             return
         }
         if(root[0].children!==null) {
@@ -68,7 +69,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             root[0].children = append
 
             updateRoot(root)
-            setToggle(!toggle)                                      
+            setToggle(!toggle)  
+            setValue('')                                    
             // ^Force update, this effectively runs the UseEffect that depends on a change in Root
             //      - Then it displays it in JSX render (done by useEffect(()=>{}, [toggle]))
             return
@@ -80,16 +82,38 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
     const handleClickChild = (who) => {
         console.log('alright got here', 'clicked: '+who)
         // update root , 
-        // const flattenedRoot = evalFlattenedOb(flattenObject(root))
-        // console.log(flattenedRoot)
+        const flattenedRoot = evalFlattenedOb(flattenObject(root))
+        console.log(flattenedRoot)
+
+        console.log('value', value)
+
+        if(value==='') {
+            console.log('ready to delete')
+
+            console.log(findPathWho(root,who))
+            console.log(findPathCol (root,who))
+            // Delete node
+            const pathCol = findPathCol(root,who)                   // Path is in this format #=> [col,col,col]
+
+            let holder = [`root[${pathCol[0]}]`]
+            pathCol.slice(1,pathCol.length-1).map((elem,i) => {
+                holder.push(`children[${pathCol[i+1]}]`)
+            })
+            const address = eval(holder.join('.'))
+            console.log('address' , address)
+            address.children = null
+            updateRoot(root)
+            setToggle(!toggle)
+            return
+        }
  
 
         // Find who, and add 'who' as a child
         // Find path of who
-        const path = findPathWho(root,who)                   // Path is in this format #=> [root,parent,who]
+        const path = findPathWho(root,who)                      // Path is in this format #=> [root,parent,who]
         const pathCol = findPathCol(root,who)                   // Path is in this format #=> [col,col,col]
-        console.log(path)
-        console.log(pathCol)
+        // console.log(path)
+        // console.log(pathCol)
         // Edit that root 
         //      - Find address:
         let holder = [`root[${pathCol[0]}]`]
@@ -97,14 +121,16 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             holder.push(`children[${pathCol[i+1]}]`)
         })
         const address = eval(holder.join('.'))
-        console.log('address' , address)
+        // console.log('address' , address)
         
             // Add who under node  
             if(address.children === null) {
                 address.children = [{ who: value, children: null}]
                 // console.log([{ who: who, children: null}])
                 updateRoot(root)
+                setValue('')
                 setToggle(!toggle)
+                console.log('1')
                 return
             }
 
@@ -119,9 +145,13 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                 address.children = append
     
                 updateRoot(root)
-                setToggle(!toggle)                                      
+                setValue('')
+                setToggle(!toggle)  
+                console.log('2')                                    
                 return
             }
+
+            console.log('nobody in value')
 
         // upon successfull add, set Value to '' to reset and allow another update
         // might not have to because the conditional checks if its an element of root
@@ -295,17 +325,11 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         return (
             <React.Fragment>
-                {/* layer 1 */}
-                {/* <div className="d-flex flex-column justify-content-center align-items-center">
-                    <p className={`border border-dark bg-primary text-dark ${dispAttribute1} rounded d-flex justify-content-center align-items-center`} style={{width: '70px', height: '50px', fontWeight: 'bold', fontSize: '1em', position: 'absolute', top: '250px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p> */}
-                    {/* Test */}
-                    {/* {drawingTest()}  */}
-                {/* </div> */}
                 {/* {layer 2} */}
                 {Array(lengthLay2).fill().map((elem,i) => {
                     return (
                         <div id='target' className={`${dispAttribute2} text-orange`} style={{ zIndex: '5', position: 'absolute', top: '200px', left: '200px', height: '200px', width: '200px', transform: `rotate(${i*360/lengthLay2}deg)`}}>
-                            <h3><Badge variant='warning'>{testNotes[flattenedRoot[1][i]][0]}</Badge></h3>
+                            <h4><Badge variant='warning'>{testNotes[flattenedRoot[1][i]][0]}</Badge></h4>
                         </div>                        
                     )
                 })}
@@ -329,7 +353,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         return (
             <div>{flattenedRoot.splice(1,flattenedRoot.length-1).map(elem => (
-                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <h5><Badge id={'Tag'+e} onClick={()=>clickedMapNote(e)} className='bg-primary text-white border border-dark rounded' style={{width: '70px', marginTop: '5%'}}>{lessThanFifteen(testNotes[e][0],9)}</Badge></h5> )}</div>
+                    <div className='row d-flex flex-row align-items-center justify-content-center'>{ elem.map(e => <h5><Badge id={'Tag'+e} onClick={()=>clickedMapNote(e)} className='bg-primary text-white border border-dark rounded' style={{width: '70px', marginTop: '5%', transition: 'all .3s ease-in'}}>{lessThanFifteen(testNotes[e][0],9)}</Badge></h5> )}</div>
             ))}</div>
         )
     }
@@ -380,12 +404,12 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
         // find depth of who
         const flatOb = evalFlattenedOb(flattenObject(tree))
-        console.log(flatOb)
+        // console.log(flatOb)
         flatOb.map((elem,i) => {
             if(elem.includes(who.toString()) || elem.includes(who))
                 depth.push(i)
         }) 
-        console.log('depth, ' + depth)
+        // console.log('depth, ' + depth)
 
 
         let w=who
@@ -682,7 +706,7 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                         {/* but it will look like [0,3,4,5] */}
                         {whichList().map((elem,index) => (
                             <li onClick={() => clickedNote(elem)} className='col' style={{width: '200px', listStyleType: 'none', pointerEvents: `${conditional('none','auto',elem)}`}}>
-                                <p className='rounded'/*'border border-secondary rounded'*/ style={{backgroundColor: `${conditional('gray','green',elem)}`, color: `${conditional('black','white',elem)}`, fontWeight: 'bold', fontSize: '1.2em'}}>{lessThanFifteen(notesTitle[elem].children[0].text,18)}</p>
+                                <p className='rounded'/*'border border-secondary rounded'*/ style={{backgroundColor: `${conditional('gray','green',elem)}`, color: `${conditional('black','white',elem)}`, fontWeight: 'bold', fontSize: '1.2em', transition: 'all .3s ease-in'}}>{lessThanFifteen(notesTitle[elem].children[0].text,18)}</p>
                             </li>                                                
                         ))}
                     </ul>  
@@ -700,6 +724,13 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 }
 
 // Graveyard
+
+                {/* layer 1 */}
+                {/* <div className="d-flex flex-column justify-content-center align-items-center">
+                    <p className={`border border-dark bg-primary text-dark ${dispAttribute1} rounded d-flex justify-content-center align-items-center`} style={{width: '70px', height: '50px', fontWeight: 'bold', fontSize: '1em', position: 'absolute', top: '250px'}}>{lessThanFifteen(testNotes[root[0].who][0],9)}</p> */}
+                    {/* Test */}
+                    {/* {drawingTest()}  */}
+                {/* </div> */}
 
         // Testing 
         // const test2 = [{who: '1', children: [{who: '1.2', children: [{who: '1.2.3', children: null}]}, {who: '1.4', children: [{who: '1.4.0', children: null}]}]}]
