@@ -101,9 +101,34 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
             })
             const address = eval(holder.join('.'))
             console.log('address' , address)
-            address.children = null
-            updateRoot(root)
-            setToggle(!toggle)
+
+            // -- Before we delete below, we need to know if there are any children
+ 
+            // If just one child, means we can go ahead and delete
+            if(address.children.length===1) {
+                address.children = null
+                updateRoot(root)
+                setToggle(!toggle)
+                return
+            }
+            else {
+                // copy complete child 
+                const copy = address.children
+                // map through and only delete elem.who===who
+                let newNode = []
+                copy.map(elem => {
+                    if(elem.who!==who)
+                        newNode.push(elem)
+                })
+                console.log(newNode, who)
+                address.children = newNode
+                updateRoot(root)
+                setToggle(!toggle)
+                return
+            }
+
+
+
             return
         }
  
