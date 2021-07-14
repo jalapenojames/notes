@@ -38,9 +38,9 @@ export default class HomeOG extends Component {
                         </div>)
                         })}</div>))
                     }
-                    <div onClick={() => this.props.updateLayer(0)} style={{position: 'absolute', height: '30px', width: '30px', top: '0', left: '0'}}>
+                    {/* <div onClick={() => this.props.updateLayer(0)} style={{position: 'absolute', height: '30px', width: '30px', top: '0', left: '0'}}>
                         <img src={_arrow} alt='arrow' style={{height: '15px', color: 'black', transform: 'rotate(180deg)'}}/>
-                    </div>
+                    </div> */}
                 </div>
                 <div style={{position: 'absolute', height: '100px', width: '100px', left: '-120px'}}>
                     <Form><Form.Group>
@@ -91,8 +91,9 @@ export default class HomeOG extends Component {
         return (
             <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
                 <div className='row' style={{position: 'relative'}}>
-                    {this.props.layer===0? this.layer0() : console.log()}
-                    {this.props.layer===1? this.layer1(): console.log()}
+                    {/* {this.props.layer===0? this.layer0() : console.log()}
+                    {this.props.layer===1? this.layer1(): console.log()} */}
+                    {this.layer1()}
                     <div className='col' style={{position: 'absolute', left: '500px'}}>
                         <Link to='/home'><img src={_arrow} alt='arrow' style={{height: '15px'}}/></Link>
                         {/* <img src={_plus} alt='plus sign' style={{height: '15px'}}/> */}
