@@ -12,13 +12,40 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 
   useEffect(() => {updateRedirect(0)}, [])
 
+  const patchTitle = (newTitle) => {
+    const titleObj = {
+      title: newTitle,
+      content: value
+    }
+
+    // Title patch request
+    fetch(`http://localhost:3000/notes/${index+1}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(titleObj)
+    })
+        .then(r => r.json())
+        .then(console.log("Patched notes"))
+  }
+
+  const patchContent = () => {
+
+  }
+
   return (
     <div className="App">
       <div className='border border-secondary' style={{padding: '2% 5% 6% 5%'}}>
         { who==='home'? <NavLink to='/home' className="noteTitle"><h1>back</h1></NavLink> : who==='homeOG'? <NavLink to='/homeOG' className="noteTitle"><h1>back</h1></NavLink> : <h1>back</h1>}
         <br/><br/>
         <br/><br/>
+
+        {/* {title} */}
         <Slate editor={editor2} value={value2} onChange={(newValue) => {
+              // patchTitle(newValue)
+
               setValue2(newValue)
 
               updateNotes(newValue[0], index, 'title')
@@ -26,11 +53,14 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
           <Editable style={{ /*border: "1px solid black",*/ borderBottom: 'none', height: '30px', width: '400px', fontFamily: '', fontSize: '2em', fontWeight: 'bold'}}/>
         </Slate>
           <br/>
+
+        {/* {content} */}
         <Slate editor={editor} value={value} onChange={(newValue) => {
               setValue(newValue)
 
               // Here is where we update testNotes in MC, but we also want it to give paragraph breaks to state
               updateNotes(newValue, index, 'content')
+              // patchContent()
           }}>
           <Editable style={{ border: "1px solid black", height: '400px', overFlowY: 'auto'}}/>
         </Slate>

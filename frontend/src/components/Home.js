@@ -3,6 +3,7 @@ import _arrow from '../arrow.png'
 import _create from '../create.png'
 import _map from '../map.png'
 import { Link, Redirect } from 'react-router-dom'
+import PaperCanvas from './PaperCanvas'
 
 export default function Home({ testClick, handleClickNew, redirect, testNotes, updateWho, note, deleteCurrentNote, notesAssoc, users, currentUser, updateUserNotes, notesTitle, notesContent }) {
     
@@ -53,6 +54,9 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
         <div className='d-flex flex-row align-items-center justify-content-center' style={{height: '100%'}}>
             <p style={{marginBottom: '160px', fontFamily: 'quicksand', fontSize: '1.5em', paddingRight: '10%'}}>Welcome, {currentUser}</p>
             <div className='d-flex flex-row' style={{position: 'relative'}}>
+                <div className='border-primary' style={{height: '800px', width: '1100px', position: 'absolute', zIndex: '0', top: '-300px', left: '-400px'}}>
+                    <PaperCanvas />
+                </div>
                 <div className='col d-flex justify-content-end' style={{paddingRight: '5%'}}><div className='d-flex align-items-center'><div style={{fontFamily: 'Times New Roman', fontSize: '4em'}}>Notes</div></div></div>
                 <div className='col' style={{height: '300px', overflowY: 'auto', whiteSpace: 'nowrap', maxWidth: '500px'}}>
                     {/* {Note Panel} */}

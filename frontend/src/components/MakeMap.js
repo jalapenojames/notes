@@ -6,6 +6,7 @@ import { BFSdriver } from './MapBFS'
 import _next from '../next_arrow.png'
 import _back from '../note_back.png'
 import _grid from '../grid.png'
+import _save from '../save.png'
 import Rotate from './Rotate'
 import Rotate2 from './Rotate2'
 
@@ -719,13 +720,36 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
 
     const conditional2 = (color1, color2, elem) => layerMap===1? value===elem? root.length>0? mapTree2(root,[]).includes(elem)? color1 : color2 : console.log() : console.log() : console.log()
 
+    const handleSave = () => {
+
+        const patchNotesObj = {
+            // need 
+
+        }
+
+
+        
+        // // User patch request
+        // fetch('http://localhost:3000/', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Accept': 'application/json'
+        //     },
+        //     body: JSON.stringify(postObj)
+        // })
+        //     .then(r => r.json())
+        //     .then(console.log("Patched user"))
+    }
+
     return (
         <div className='d-flex align-items-center justify-content-center' style={{height: '100%'}}>
 
             {/* { PANEL } */}
-            <div className='d-flex align-items-center' style={{height: '100%'/*, borderRight: 'solid 1px black'*/, position: 'relative'}}>
-                <div className='' style={{position: 'absolute', height: '80px', width: '80px', top: '120px', left: '100px'}}><Link to='/home' className='noteTitle'>back</Link> </div>
-                <div className='d-flex align-items-center' style={{width: '300px', height: '500px'}}>
+            <div className='d-flex flex-column justify-content-center align-items-center' style={{height: '100%'/*, borderRight: 'solid 1px black'*/, position: 'relative'}}>
+                <div className='' style={{position: '', height: '80px', width: '80px'}}></div>
+                <div className='d-flex flex-column align-items-center' style={{width: '300px', height: '500px'}}>
+                    <Link to='/home' className='noteTitle' style={{paddingRight: '10%'}}>back</Link>
                     <ul className='notesTitle'style={{margin: 'auto', width: '300px', height: '400px', overflowY: 'auto'}}>
                         {/* notes looks like [0,1,2,3,4,5,6,7,8] */}
                         {/* but it will look like [0,3,4,5] */}
@@ -736,6 +760,8 @@ export default function MakeMap({ notesTitle, layerMap, updateLayerMap, root, up
                         ))}
                     </ul>  
                 </div>
+                {/* <img onClick={handleSave} src={_save} alt='save btn' style={{height: '30px', paddingRight: '8%'}}/>
+                <div style={{paddingRight: '8%'}}>{'saved!'}</div> */}
             </div>
 
             {/* { MAP MAKER } */}
