@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
  
-export default function SlateEditor({ note, index, updateRedirect, updateNotes, who, notesTitle, notesContent, testNotes }) {
+export default function SlateEditor({ note, index, updateRedirect, updateNotes, who, notesTitle, notesContent, testNotes, updateIndex }) {
   const editor = useMemo(() => withReact(createEditor()), []);
   const editor2 = useMemo(() => withReact(createEditor()), []);
 
@@ -35,11 +35,17 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
 
   }
 
+  const switchCurrentNote = (index) => {
+    setValue(notesContent[index])
+    setValue2([notesTitle[index]])
+    updateIndex(index)
+  }
+
   return (
     <div className="App d-flex flex-row" style={{posiition: 'relative'}}>
 
       {/* {Editor} */}
-      <div className='border border-secondary' style={{padding: '2% 5% 6% 5%', position: 'absolute', height: '100vh', width: '700px'}}>
+      <div className='' style={{padding: '2% 5% 6% 5%', position: 'absolute', height: '100vh', width: '700px', borderWidth: '0 1px 0 0 0', border: 'solid black'}}>
         { who==='home'? <NavLink to='/home' className="noteTitle"><h1>back</h1></NavLink> : who==='homeOG'? <NavLink to='/homeOG' className="noteTitle"><h1>back</h1></NavLink> : <h1>back</h1>}
         <br/><br/>
         <br/><br/>
@@ -64,7 +70,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
               updateNotes(newValue, index, 'content')
               // patchContent()
           }}>
-          <Editable style={{ border: "1px solid black", height: '400px', overFlowY: 'auto'}}/>
+          <Editable style={{ borderTop: "1px solid black", paddingTop: '3%', height: '400px', overFlowY: 'auto'}}/>
         </Slate>
       </div>
 
@@ -75,7 +81,7 @@ export default function SlateEditor({ note, index, updateRedirect, updateNotes, 
           {testNotes.map((elem,index) => (
               <React.Fragment>
                   <div key={index} className='' style={{borderBottom: '1px solid black', padding: '2%'}}>
-                      <div className='row' style={{overflowX: 'hidden'}}><h2>{elem[0]}</h2></div>
+                      <div className='row' style={{overflowX: 'hidden'}} onClick={()=>switchCurrentNote(index)}><h2>{elem[0]}</h2></div>
                       <div className='row' style={{overflowX: 'hidden'}}><p>{elem[1].split('<br/>')[0]}</p></div>
                       {/* elem[1] is now a nested array, lets write code to convert to text */}
                       {/* {redirect===1? <Redirect to='/editor'/> : console.log() } */}

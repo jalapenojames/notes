@@ -52,7 +52,10 @@ export default function Home({ testClick, handleClickNew, redirect, testNotes, u
 
     return (
         <div className='d-flex flex-row align-items-center justify-content-center' style={{height: '100%'}}>
-            <p style={{marginBottom: '160px', fontFamily: 'quicksand', fontSize: '1.5em', paddingRight: '10%'}}>Welcome, {currentUser}</p>
+            <div className='d-flex flex-row'>
+                <p style={{marginBottom: '160px', fontFamily: 'quicksand', fontSize: '1.5em', paddingRight: '5%'}}>Welcome, </p>
+                <h3 style={{fontWeight: 'normal'}}>{currentUser}</h3>
+            </div>
             <div className='d-flex flex-row' style={{position: 'relative'}}>
                 <div className='border-primary' style={{height: '800px', width: '1100px', position: 'absolute', zIndex: '0', top: '-300px', left: '-400px'}}>
                     <PaperCanvas />

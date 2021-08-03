@@ -51,6 +51,8 @@ export default class MainContainer extends Component {
         })
     }
 
+    updateIndex = (index) => this.setState({ index })
+
     updateLoginRedirect = (loginRedirect) => this.setState({loginRedirect})
 
     updateCurrentUser = (currentUser) => this.setState({ currentUser })
@@ -74,6 +76,7 @@ export default class MainContainer extends Component {
     updateTestNotes = () => {
         const testNotes = this.state.notesTitle.map(elem => elem.children[0].text).map((elem,index) => {
             return [elem].concat([this.state.notesContent[index].map(elem => (elem.children[0].text+'<br/>')).join('')])
+            // data[7].content.map((elem,i) => elem.children.map(elem => elem.text)+'<br/>').join('')
         })
         this.setState({ testNotes }, () => this.setState({currentEditor: this.state.testNotes[this.state.index]}))
     }
@@ -136,8 +139,12 @@ export default class MainContainer extends Component {
 
                 const notesTitle = data.map(elem => elem.title)
                 const notesContent = data.map(elem => [elem.content])
+                // console.log([data[6].content])
+                // return [elem].concat([this.state.notesContent[index].map(elem => (elem.children[0].text+'<br/>')).join('')])
+                // console.log(data[6].content.map((elem,i) => elem.children.map(elem => elem.text)+'<br/>').join('')) //.map(elem => (elem.children[0].text+'<br/>')).join(''))
+                // console.log(data[7].content.map((elem,i) => elem.children.map(elem => elem.text)+'<br/>').join('')) //.map(elem => (elem.children[0].text+'<br/>')).join(''))
 
-                const notesAssoc = data.map(elem => [elem.id, { userID: elem.user_id}])
+                const notesAssoc = data.map(elem => [elem.id, { userID: elem.user_id }])
                 
                 this.setState({ notesAssoc })
 
@@ -158,7 +165,7 @@ export default class MainContainer extends Component {
                     {/* <Route exact path='/'><Home note={this.state.currentEditor} testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho} updateIndex={this.updateIndex} deleteCurrentNote={this.deleteCurrentNote}/></Route> */}
                     <Route path='/home'><Home notesTitle={this.state.notesTitle} notesContent={this.state.notesContent} note={this.state.currentEditor} testClick={this.testClick} handleClickNew={this.handleClickNew} redirect={this.state.redirect} testNotes={this.state.testNotes} updateWho={this.updateWho} updateIndex={this.updateIndex} deleteCurrentNote={this.deleteCurrentNote} notesAssoc={this.state.notesAssoc} users={this.state.users} currentUser={this.state.currentUser} updateUserNotes={this.updateUserNotes} filteredPanel={this.state.filteredPanel} updateFilteredPanel={this.updateFilteredPanel}/></Route>
                     <Route path='/homeOG'><HomeOG note={this.state.currentEditor} testClick={this.testClick} testNotes={this.state.testNotes} redirect={this.state.redirect} updateWho={this.updateWho} updateLayer={this.updateLayer} layer={this.state.layer} filtered={this.state.filtered} updateFilter={this.updateFilter}/></Route>
-                    <Route path='/editor'><SlateEditor testNotes={this.state.testNotes} note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who} notesTitle={this.state.notesTitle} notesContent={this.state.notesContent}/></Route>
+                    <Route path='/editor'><SlateEditor updateIndex={this.updateIndex} testNotes={this.state.testNotes} note={this.state.currentEditor} index={this.state.index} updateRedirect={this.updateRedirect} updateNotes={this.updateNotes} who={this.state.who} notesTitle={this.state.notesTitle} notesContent={this.state.notesContent}/></Route>
                     <Route path='/makemap'><MakeMap filteredPanel={this.state.filteredPanel} testNotes={this.state.testNotes} notesTitle={this.state.notesTitle} layerMap={this.state.layerMap} updateLayerMap={this.updateLayerMap} root={this.state.root} updateRoot={this.updateRoot} updateRootModified={this.updateRootModified}/></Route>
                     <Route path='/canvas'><PaperCanvas/></Route>
                 </Switch>
